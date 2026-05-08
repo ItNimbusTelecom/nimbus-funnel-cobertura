@@ -7,6 +7,7 @@ import { HeroActions } from "@/components/HeroActions";
 import { LandingTracker } from "@/components/LandingTracker";
 import { LocalServiceSection } from "@/components/LocalServiceSection";
 import { MobilePlans } from "@/components/MobilePlans";
+import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { VideoSection } from "@/components/VideoSection";
 
 const problemBullets = [
@@ -154,6 +155,7 @@ export default function Home() {
 
         <MobilePlans />
         <FAQSection />
+        <TestimonialsSection />
         <DirectContractBlock />
         <CoverageStudyFunnel />
       </main>
