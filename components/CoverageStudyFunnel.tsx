@@ -31,7 +31,14 @@ export function CoverageStudyFunnel() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [completed, setCompleted] = useState(false);
 
-  const progress = completed ? 100 : Math.round((step / 5) * 100);
+  const completedSteps = [
+    Boolean(coverageProblem),
+    Boolean(problemLocationType),
+    mobileUsage.length > 0,
+    step > 4 || completed,
+    completed,
+  ].filter(Boolean).length;
+  const progress = completed ? 100 : Math.round((completedSteps / 5) * 100);
   const consentError = error === dictionary.form.errors.consent ? error : undefined;
 
   function startIfNeeded() {

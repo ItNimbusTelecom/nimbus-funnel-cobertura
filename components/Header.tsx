@@ -73,7 +73,7 @@ export function Header() {
             aria-expanded={isMenuOpen}
             aria-controls="mobile-menu"
             aria-label={isMenuOpen ? "Cerrar menú" : "Abrir menú"}
-            className="grid size-10 place-items-center rounded-full border border-nimbus-line text-nimbus-ink transition hover:border-nimbus-orange hover:text-nimbus-orange focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nimbus-orange lg:hidden"
+            className="grid size-10 place-items-center rounded-full border border-nimbus-orange bg-white text-nimbus-ink shadow-sm transition hover:bg-orange-50 hover:text-nimbus-orange focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nimbus-orange lg:hidden"
           >
             <span className="sr-only">{isMenuOpen ? "Cerrar menú" : "Abrir menú"}</span>
             <span aria-hidden="true" className="grid gap-1.5">
