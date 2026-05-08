@@ -6,6 +6,7 @@ import { getElapsedSeconds } from "@/lib/antispam";
 import { submitLead } from "@/lib/submitLead";
 import { getLeadSource } from "@/lib/utm";
 import { LegalConsentCheckbox } from "./LegalConsentCheckbox";
+import { VisualIcon } from "./VisualIcon";
 
 type PreferredContact = "phone" | "whatsapp" | "email";
 
@@ -332,13 +333,14 @@ export function CoverageStudyFunnel() {
                           key={option}
                           type="button"
                           onClick={() => setPreferredContact(option)}
-                          className={`rounded-lg border px-4 py-3 text-left text-sm font-black transition ${
+                          className={`flex items-center gap-2 rounded-lg border px-4 py-3 text-left text-sm font-black transition ${
                             preferredContact === option
                               ? "border-nimbus-orange bg-orange-50 text-nimbus-ink"
                               : "border-nimbus-line text-nimbus-muted hover:border-nimbus-orange"
                           }`}
                         >
-                          {preferredContactLabel(option)}
+                          <VisualIcon name={preferredContactIcon(option)} className="size-4 shrink-0 text-nimbus-orange" />
+                          <span>{preferredContactLabel(option)}</span>
                         </button>
                       ))}
                     </div>
@@ -520,4 +522,14 @@ function preferredContactLabel(value: PreferredContact) {
     return "WhatsApp";
   }
   return "Email";
+}
+
+function preferredContactIcon(value: PreferredContact) {
+  if (value === "phone") {
+    return "phone" as const;
+  }
+  if (value === "whatsapp") {
+    return "message-circle" as const;
+  }
+  return "mail" as const;
 }

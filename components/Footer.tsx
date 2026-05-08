@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { NIMBUS_LOGO_URL } from "@/lib/brand";
 import { CONTACT_INFO, LEGAL_LINKS, SOCIAL_LINKS } from "@/lib/contact";
+import { VisualIcon } from "./VisualIcon";
 
 export function Footer() {
   return (
@@ -63,15 +64,22 @@ export function Footer() {
           <h2 className="text-sm font-black uppercase tracking-[0.16em] text-nimbus-ink">Oficina</h2>
           <div className="mt-4 space-y-3 text-sm leading-6 text-nimbus-muted">
             <a
-              className="block transition hover:text-nimbus-orange"
+              className="inline-flex items-start gap-2 transition hover:text-nimbus-orange"
               href={CONTACT_INFO.mapsHref}
               target="_blank"
               rel="noopener noreferrer"
             >
-              {CONTACT_INFO.address}
+              <VisualIcon name="map-pin" className="mt-0.5 size-4 shrink-0" />
+              <span>{CONTACT_INFO.address}</span>
             </a>
-            <p>{CONTACT_INFO.hours}</p>
-            <p>{CONTACT_INFO.commercialHours}</p>
+            <p className="flex items-start gap-2">
+              <VisualIcon name="clock" className="mt-0.5 size-4 shrink-0" />
+              <span>{CONTACT_INFO.hours}</span>
+            </p>
+            <p className="flex items-start gap-2">
+              <VisualIcon name="clock" className="mt-0.5 size-4 shrink-0" />
+              <span>{CONTACT_INFO.commercialHours}</span>
+            </p>
           </div>
         </div>
 

@@ -1,25 +1,27 @@
+import { VisualIcon } from "./VisualIcon";
+
 const serviceCards = [
   {
-    icon: "01",
+    icon: "headphones",
     title: "Atención humana",
     text: "Hablas con personas que escuchan tu problema, no con un proceso automático pensado solo para venderte otra tarifa.",
   },
   {
-    icon: "02",
+    icon: "map-pin",
     title: "Conocimiento del territorio",
     text: "Trabajamos en la zona y conocemos muchos de los problemas reales de cobertura, instalación y uso que se encuentran hogares y negocios.",
   },
   {
-    icon: "03",
+    icon: "lightbulb",
     title: "Te ayudamos a entender",
     text: "No tienes por qué saber si el problema es de la red, del móvil, de la configuración o de la tarifa. Te lo explicamos de forma clara.",
   },
   {
-    icon: "04",
+    icon: "life-buoy",
     title: "Seguimos después de contratar",
     text: "Nuestro trabajo no termina cuando activas la línea. Si necesitas ayuda, seguimos cerca para revisar, configurar y resolver.",
   },
-];
+] as const;
 
 export function LocalServiceSection() {
   return (
@@ -45,8 +47,8 @@ export function LocalServiceSection() {
           <div className="grid gap-4 sm:grid-cols-2">
             {serviceCards.map((card) => (
               <article key={card.title} className="rounded-lg border border-nimbus-line bg-nimbus-soft p-5">
-                <div className="grid size-10 place-items-center rounded-full bg-white text-sm font-black text-nimbus-orange">
-                  {card.icon}
+                <div className="grid size-10 place-items-center rounded-full bg-white text-nimbus-orange">
+                  <VisualIcon name={card.icon} className="size-5" />
                 </div>
                 <h3 className="mt-5 text-lg font-black text-nimbus-ink">{card.title}</h3>
                 <p className="mt-3 text-sm leading-6 text-nimbus-muted">{card.text}</p>

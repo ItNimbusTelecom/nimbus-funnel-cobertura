@@ -4,6 +4,7 @@ import { useState } from "react";
 import { trackEvent } from "@/lib/analytics";
 import { MOBILE_PLANS, type MobilePlan } from "@/lib/plans";
 import { DirectContractModal } from "./DirectContractModal";
+import { VisualIcon } from "./VisualIcon";
 
 export function MobilePlans() {
   const [selectedPlan, setSelectedPlan] = useState<MobilePlan | null>(null);
@@ -37,13 +38,22 @@ export function MobilePlans() {
               <div className="flex-1">
                 <h3 className="text-xl font-black text-nimbus-ink">{plan.name}</h3>
                 <p className="mt-3 text-3xl font-black text-nimbus-orange">{plan.price}</p>
-                <p className="mt-1 text-sm font-black uppercase tracking-[0.14em] text-nimbus-muted">{plan.data}</p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-50 px-3 py-1 text-xs font-black text-nimbus-orange">
+                    <VisualIcon name="database" className="size-3.5" />
+                    {plan.data}
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-nimbus-soft px-3 py-1 text-xs font-black text-nimbus-muted">
+                    <VisualIcon name="phone" className="size-3.5" />
+                    Llamadas
+                  </span>
+                </div>
                 <p className="mt-3 text-nimbus-muted">{plan.description}</p>
                 <ul className="mt-5 space-y-3 text-sm text-nimbus-muted">
                   {plan.features.map((item) => (
                     <li key={item} className="flex gap-3">
                       <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-orange-100 text-xs font-black text-nimbus-orange">
-                        ✓
+                        <PlanFeatureIcon feature={item} />
                       </span>
                       <span>{item}</span>
                     </li>
@@ -65,4 +75,16 @@ export function MobilePlans() {
       {selectedPlan ? <DirectContractModal plan={selectedPlan} onClose={() => setSelectedPlan(null)} /> : null}
     </section>
   );
+}
+
+function PlanFeatureIcon({ feature }: { feature: string }) {
+  if (feature.includes("permanencia")) {
+    return <VisualIcon name="shield-check" className="size-3.5" />;
+  }
+
+  if (feature.includes("Acumula")) {
+    return <VisualIcon name="database" className="size-3.5" />;
+  }
+
+  return <VisualIcon name="check-circle" className="size-3.5" />;
 }

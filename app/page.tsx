@@ -10,6 +10,7 @@ import { LocalServiceSection } from "@/components/LocalServiceSection";
 import { MobilePlans } from "@/components/MobilePlans";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { VideoSection } from "@/components/VideoSection";
+import { VisualIcon } from "@/components/VisualIcon";
 
 const problemBullets = [
   "¿Te quedas sin cobertura en casa?",
@@ -20,15 +21,15 @@ const problemBullets = [
 ];
 
 const solutionChecks = [
-  "Triple cobertura",
-  "Llamadas ilimitadas",
-  "5G si tu terminal es compatible",
-  "VoLTE si tu terminal es compatible",
-  "Llamadas WiFi si tu terminal es compatible",
-  "Roaming",
-  "eSIM disponible",
-  "Sin venderte más de lo que necesitas",
-];
+  { label: "Triple cobertura", icon: "radio-tower" },
+  { label: "Llamadas ilimitadas", icon: "phone" },
+  { label: "5G si tu terminal es compatible", icon: "wifi" },
+  { label: "VoLTE si tu terminal es compatible", icon: "phone-call" },
+  { label: "Llamadas WiFi si tu terminal es compatible", icon: "wifi" },
+  { label: "Roaming", icon: "globe" },
+  { label: "eSIM disponible", icon: "smartphone" },
+  { label: "Sin venderte más de lo que necesitas", icon: "shield-check" },
+] as const;
 
 export default function Home() {
   return (
@@ -122,11 +123,11 @@ export default function Home() {
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
               {solutionChecks.map((item) => (
-                <div key={item} className="flex gap-3 rounded-lg bg-white p-4 shadow-sm">
-                  <span className="grid size-6 shrink-0 place-items-center rounded-full bg-orange-100 text-sm font-black text-nimbus-orange">
-                    ✓
+                <div key={item.label} className="flex gap-3 rounded-lg bg-white p-4 shadow-sm">
+                  <span className="grid size-9 shrink-0 place-items-center rounded-full bg-orange-100 text-nimbus-orange">
+                    <VisualIcon name={item.icon} className="size-4" />
                   </span>
-                  <span className="font-bold text-nimbus-ink">{item}</span>
+                  <span className="font-bold text-nimbus-ink">{item.label}</span>
                 </div>
               ))}
             </div>

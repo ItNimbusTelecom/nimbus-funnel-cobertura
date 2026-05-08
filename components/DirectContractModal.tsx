@@ -7,6 +7,7 @@ import { type MobilePlan } from "@/lib/plans";
 import { submitLead as submitLeadRequest } from "@/lib/submitLead";
 import { getLeadSource } from "@/lib/utm";
 import { LegalConsentCheckbox } from "./LegalConsentCheckbox";
+import { VisualIcon } from "./VisualIcon";
 
 type ContactChoice = "phone" | "whatsapp" | "office";
 
@@ -15,10 +16,10 @@ type DirectContractModalProps = {
   onClose: () => void;
 };
 
-const contactChoices: Array<{ id: ContactChoice; label: string }> = [
-  { id: "phone", label: "Que me llaméis" },
-  { id: "whatsapp", label: "Prefiero WhatsApp" },
-  { id: "office", label: "Quiero acercarme a la oficina" },
+const contactChoices: Array<{ id: ContactChoice; label: string; icon: "phone" | "message-circle" | "map-pin" }> = [
+  { id: "phone", label: "Que me llaméis", icon: "phone" },
+  { id: "whatsapp", label: "Prefiero WhatsApp", icon: "message-circle" },
+  { id: "office", label: "Quiero acercarme a la oficina", icon: "map-pin" },
 ];
 
 export function DirectContractModal({ plan, onClose }: DirectContractModalProps) {
@@ -163,13 +164,14 @@ export function DirectContractModal({ plan, onClose }: DirectContractModalProps)
                   key={item.id}
                   type="button"
                   onClick={() => selectChoice(item.id)}
-                  className={`rounded-lg border px-4 py-3 text-left text-sm font-bold transition ${
+                  className={`flex items-center gap-2 rounded-lg border px-4 py-3 text-left text-sm font-bold transition ${
                     choice === item.id
                       ? "border-nimbus-orange bg-orange-50 text-nimbus-ink"
                       : "border-nimbus-line text-nimbus-muted hover:border-nimbus-orange"
                   }`}
                 >
-                  {item.label}
+                  <VisualIcon name={item.icon} className="size-4 shrink-0 text-nimbus-orange" />
+                  <span>{item.label}</span>
                 </button>
               ))}
             </div>

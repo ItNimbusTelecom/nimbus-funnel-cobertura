@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { trackEvent } from "@/lib/analytics";
+import { VisualIcon } from "./VisualIcon";
 
 const faqItems = [
   {
@@ -94,9 +95,9 @@ export function FAQSection() {
                   <span className="text-lg font-black text-nimbus-ink">{item.question}</span>
                   <span
                     aria-hidden="true"
-                    className="grid size-8 shrink-0 place-items-center rounded-full bg-orange-100 text-xl font-black leading-none text-nimbus-orange"
+                    className="grid size-8 shrink-0 place-items-center rounded-full bg-orange-100 text-nimbus-orange"
                   >
-                    {isOpen ? "−" : "+"}
+                    <VisualIcon name={isOpen ? "chevron-up" : "chevron-down"} className="size-4" />
                   </span>
                 </button>
                 <div id={contentId} hidden={!isOpen} className="px-5 pb-5 md:px-6">
