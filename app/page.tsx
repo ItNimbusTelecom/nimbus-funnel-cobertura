@@ -6,6 +6,7 @@ import { HeroActions } from "@/components/HeroActions";
 import { LandingTracker } from "@/components/LandingTracker";
 import { LocalServiceSection } from "@/components/LocalServiceSection";
 import { MobilePlans } from "@/components/MobilePlans";
+import { VideoSection } from "@/components/VideoSection";
 
 const problemBullets = [
   "¿Te quedas sin cobertura en casa?",
@@ -128,6 +129,8 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        <VideoSection />
 
         <LocalServiceSection />
 
