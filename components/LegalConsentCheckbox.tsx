@@ -1,0 +1,63 @@
+type LegalConsentCheckboxProps = {
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  error?: string;
+  id?: string;
+  name?: string;
+};
+
+const PRIVACY_POLICY_URL = "https://nimbustelecom.es/politica-de-privacidad/";
+const LEGAL_NOTICE_URL = "https://nimbustelecom.es/aviso-legal/";
+
+export function LegalConsentCheckbox({
+  checked,
+  onChange,
+  error,
+  id = "legal-consent",
+  name = "consent",
+}: LegalConsentCheckboxProps) {
+  const errorId = `${id}-error`;
+
+  return (
+    <div className="mt-5">
+      <div className="flex gap-3 text-sm leading-6 text-nimbus-muted">
+        <input
+          id={id}
+          name={name}
+          type="checkbox"
+          checked={checked}
+          onChange={(event) => onChange(event.target.checked)}
+          className="mt-1 size-4 shrink-0 accent-nimbus-orange"
+          aria-describedby={error ? errorId : undefined}
+          aria-invalid={error ? "true" : undefined}
+        />
+        <label htmlFor={id}>
+          Acepto que Nimbus Telecom trate mis datos para contactar conmigo sobre mi solicitud, de acuerdo con la{" "}
+          <a
+            href={PRIVACY_POLICY_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-bold text-nimbus-ink underline decoration-nimbus-orange/40 underline-offset-4 transition hover:text-nimbus-orange"
+          >
+            Política de privacidad
+          </a>{" "}
+          y el{" "}
+          <a
+            href={LEGAL_NOTICE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-bold text-nimbus-ink underline decoration-nimbus-orange/40 underline-offset-4 transition hover:text-nimbus-orange"
+          >
+            Aviso legal
+          </a>
+          .
+        </label>
+      </div>
+      {error ? (
+        <p id={errorId} className="mt-2 rounded-lg bg-red-50 p-3 text-sm font-bold text-red-700">
+          {error}
+        </p>
+      ) : null}
+    </div>
+  );
+}

@@ -4,6 +4,7 @@ import { FormEvent, useState } from "react";
 import { trackEvent } from "@/lib/analytics";
 import { submitLead } from "@/lib/submitLead";
 import { getLeadSource } from "@/lib/utm";
+import { LegalConsentCheckbox } from "./LegalConsentCheckbox";
 
 type PreferredContact = "phone" | "whatsapp" | "email";
 
@@ -51,6 +52,7 @@ export function CoverageStudyFunnel() {
   const [completed, setCompleted] = useState(false);
 
   const progress = completed ? 100 : Math.round((step / 5) * 100);
+  const consentError = error === "Necesitamos tu aceptación para contactar contigo." ? error : undefined;
 
   function startIfNeeded() {
     if (step === 1 && !coverageProblem) {
@@ -362,20 +364,19 @@ export function CoverageStudyFunnel() {
                       />
                     </label>
 
-                    <label className="mt-5 flex gap-3 text-sm leading-6 text-nimbus-muted">
-                      <input
-                        type="checkbox"
-                        checked={consent}
-                        onChange={(event) => setConsent(event.target.checked)}
-                        className="mt-1 size-4 accent-nimbus-orange"
-                      />
-                      <span>Acepto que Nimbus Telecom contacte conmigo para revisar mi caso de cobertura.</span>
-                    </label>
+                    <LegalConsentCheckbox
+                      id="coverage-study-consent"
+                      checked={consent}
+                      onChange={setConsent}
+                      error={consentError}
+                    />
                   </QuestionStep>
                 </form>
               ) : null}
 
-              {error ? <p className="mt-5 rounded-lg bg-red-50 p-3 text-sm font-bold text-red-700">{error}</p> : null}
+              {error && !consentError ? (
+                <p className="mt-5 rounded-lg bg-red-50 p-3 text-sm font-bold text-red-700">{error}</p>
+              ) : null}
 
               <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
                 <button

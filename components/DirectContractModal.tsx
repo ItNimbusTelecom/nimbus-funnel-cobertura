@@ -5,6 +5,7 @@ import { trackEvent } from "@/lib/analytics";
 import { type MobilePlan } from "@/lib/plans";
 import { submitLead as submitLeadRequest } from "@/lib/submitLead";
 import { getLeadSource } from "@/lib/utm";
+import { LegalConsentCheckbox } from "./LegalConsentCheckbox";
 
 type ContactChoice = "phone" | "whatsapp" | "office";
 
@@ -31,6 +32,7 @@ export function DirectContractModal({ plan, onClose }: DirectContractModalProps)
 
   const requiresContact = choice !== "office";
   const preferredContact = useMemo(() => (choice === "office" ? "oficina" : choice), [choice]);
+  const consentError = error === "Necesitamos tu aceptación para contactar contigo." ? error : undefined;
 
   function selectChoice(nextChoice: ContactChoice) {
     setChoice(nextChoice);
@@ -202,15 +204,12 @@ export function DirectContractModal({ plan, onClose }: DirectContractModalProps)
               </label>
             </div>
 
-            <label className="mt-5 flex gap-3 text-sm leading-6 text-nimbus-muted">
-              <input
-                type="checkbox"
-                checked={consent}
-                onChange={(event) => setConsent(event.target.checked)}
-                className="mt-1 size-4 accent-nimbus-orange"
-              />
-              <span>Acepto que Nimbus Telecom contacte conmigo para ayudarme con esta contratación.</span>
-            </label>
+            <LegalConsentCheckbox
+              id="direct-contract-consent"
+              checked={consent}
+              onChange={setConsent}
+              error={consentError}
+            />
 
             {choice === "whatsapp" ? (
               <button
@@ -222,7 +221,9 @@ export function DirectContractModal({ plan, onClose }: DirectContractModalProps)
               </button>
             ) : null}
 
-            {error ? <p className="mt-4 rounded-lg bg-red-50 p-3 text-sm font-bold text-red-700">{error}</p> : null}
+            {error && !consentError ? (
+              <p className="mt-4 rounded-lg bg-red-50 p-3 text-sm font-bold text-red-700">{error}</p>
+            ) : null}
 
             <button
               type="submit"
