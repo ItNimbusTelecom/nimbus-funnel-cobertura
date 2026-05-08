@@ -15,14 +15,20 @@ export const SOCIAL_LINKS = [
   {
     label: "Facebook",
     href: "https://www.facebook.com/profile.php?id=100064631156923#",
+    icon: "facebook",
+    hoverClassName: "hover:text-[#1877F2]",
   },
   {
     label: "LinkedIn",
     href: "https://www.linkedin.com/company/nimbustelecomsl/posts/?feedView=all",
+    icon: "linkedin",
+    hoverClassName: "hover:text-[#0A66C2]",
   },
   {
     label: "Instagram",
     href: "https://www.instagram.com/nimbustelecom/",
+    icon: "instagram",
+    hoverClassName: "hover:text-[#E4405F]",
   },
 ];
 
