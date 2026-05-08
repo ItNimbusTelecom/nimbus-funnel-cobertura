@@ -4,6 +4,7 @@ import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { HeroActions } from "@/components/HeroActions";
 import { LandingTracker } from "@/components/LandingTracker";
+import { LocalServiceSection } from "@/components/LocalServiceSection";
 import { MobilePlans } from "@/components/MobilePlans";
 
 const problemBullets = [
@@ -127,6 +128,8 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        <LocalServiceSection />
 
         <section className="bg-white py-16">
           <div className="mx-auto max-w-6xl px-5">
