@@ -1,2 +1,2 @@
-:HL["/nimbus-funnel-cobertura/_next/static/chunks/01pudrsw8fdgv.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}},"staleTime":300,"buildId":"AlHnvJTl4h6uZ5-ua98hV"}
+:HL["/nimbus-funnel-cobertura/_next/static/chunks/00jmm0t-lcthi.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}},"staleTime":300,"buildId":"Sod_hCMn0TugYxAGkIETL"}
