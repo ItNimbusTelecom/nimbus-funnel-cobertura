@@ -6,7 +6,10 @@ export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
   const { locale, setLocale, dictionary } = useI18n();
 
   return (
-    <div className="flex items-center gap-1 rounded-full border border-nimbus-line bg-white p-1" aria-label={dictionary.language.ariaLabel}>
+    <div
+      className="inline-flex w-fit items-center gap-1 rounded-full border border-nimbus-line bg-white p-1"
+      aria-label={dictionary.language.ariaLabel}
+    >
       {LOCALES.map((item) => {
         const isActive = item.code === locale;
         return (
@@ -22,7 +25,7 @@ export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
             }`}
             title={item.label}
           >
-            <span aria-hidden="true" className={compact ? "hidden" : "mr-1 hidden sm:inline"}>
+            <span aria-hidden="true" className={compact ? "hidden" : "mr-1 inline"}>
               {item.flag}
             </span>
             {item.shortLabel}
