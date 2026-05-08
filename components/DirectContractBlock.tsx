@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import { trackEvent } from "@/lib/analytics";
-import { mobilePlans } from "@/lib/plans";
+import { MOBILE_PLANS } from "@/lib/plans";
 import { DirectContractModal } from "./DirectContractModal";
 
 export function DirectContractBlock() {
   const [open, setOpen] = useState(false);
-  const plan = mobilePlans[1];
+  const plan = MOBILE_PLANS[1];
 
   function openModal() {
     trackEvent("contratacion_modal_opened", { plan_id: plan.id, plan_name: plan.name, source: "contratar_block" });

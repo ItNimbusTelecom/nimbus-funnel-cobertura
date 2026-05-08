@@ -1,32 +1,116 @@
 export type MobilePlan = {
   id: string;
   name: string;
-  priceLabel: string;
+  price: string;
+  data: string;
   description: string;
-  highlights: string[];
+  features: string[];
+  ctaLabel: string;
 };
 
-// Estos precios son placeholders y deben ser faciles de editar o esconder si Patricia decide no mostrar precios en esta iteracion.
-export const mobilePlans: MobilePlan[] = [
+export const MOBILE_PLANS: MobilePlan[] = [
   {
-    id: "movil-basico",
-    name: "Movil basico",
-    priceLabel: "Desde 9,90 €/mes",
-    description: "Para llamadas y uso sencillo.",
-    highlights: ["Llamadas ilimitadas", "Uso ligero de datos", "Sin permanencia"],
+    id: "mini-1gb",
+    price: "4,95€",
+    name: "MINI",
+    data: "1Gb",
+    description: "Incluye llamadas ilimitadas a fijos y móviles nacionales. Incluye 1Gb de datos.",
+    features: [
+      "IVA incluido",
+      "Sin permanencia",
+      "Acumula gigas: los datos que no usas este mes, los tienes el siguiente.",
+    ],
+    ctaLabel: "Solicitar",
   },
   {
-    id: "movil-equilibrado",
-    name: "Movil equilibrado",
-    priceLabel: "Desde 14,90 €/mes",
-    description: "Para llamadas, datos y uso diario.",
-    highlights: ["Triple cobertura", "Datos para el dia a dia", "Roaming incluido"],
+    id: "ilimitadas-30gb",
+    price: "6,95€",
+    name: "ILIMITADAS + 30Gb",
+    data: "30Gb",
+    description: "Incluye llamadas ilimitadas a fijos y móviles nacionales. Incluye 30Gb de datos.",
+    features: [
+      "IVA incluido",
+      "Sin permanencia",
+      "Acumula gigas: los datos que no usas este mes, los tienes el siguiente.",
+    ],
+    ctaLabel: "Solicitar",
   },
   {
-    id: "movil-intensivo",
-    name: "Movil intensivo",
-    priceLabel: "Desde 19,90 €/mes",
-    description: "Para mas datos y uso frecuente.",
-    highlights: ["Mas datos moviles", "5G compatible", "eSIM disponible"],
+    id: "ilimitadas-60gb",
+    price: "7,95€",
+    name: "ILIMITADAS + 60Gb",
+    data: "60Gb",
+    description: "Incluye llamadas ilimitadas a fijos y móviles nacionales. Incluye 60Gb de datos.",
+    features: [
+      "IVA incluido",
+      "Sin permanencia",
+      "Acumula gigas: los datos que no usas este mes, los tienes el siguiente.",
+    ],
+    ctaLabel: "Solicitar",
+  },
+  {
+    id: "ilimitadas-100gb",
+    price: "10,95€",
+    name: "ILIMITADAS + 100Gb",
+    data: "100Gb",
+    description: "Incluye llamadas ilimitadas a fijos y móviles nacionales. Incluye 100Gb de datos.",
+    features: [
+      "IVA incluido",
+      "Sin permanencia",
+      "Acumula gigas: los datos que no usas este mes, los tienes el siguiente.",
+    ],
+    ctaLabel: "Solicitar",
+  },
+  {
+    id: "ilimitadas-150gb",
+    price: "11,95€",
+    name: "ILIMITADAS + 150Gb",
+    data: "150Gb",
+    description: "Incluye llamadas ilimitadas a fijos y móviles nacionales. Incluye 150Gb de datos.",
+    features: [
+      "IVA incluido",
+      "Sin permanencia",
+      "Acumula gigas: los datos que no usas este mes, los tienes el siguiente.",
+    ],
+    ctaLabel: "Solicitar",
+  },
+  {
+    id: "ilimitadas-200gb",
+    price: "14,95€",
+    name: "ILIMITADAS + 200Gb",
+    data: "200Gb",
+    description: "Incluye llamadas ilimitadas a fijos y móviles nacionales. Incluye 200Gb de datos.",
+    features: [
+      "IVA incluido",
+      "Sin permanencia",
+      "Acumula gigas: los datos que no usas este mes, los tienes el siguiente.",
+    ],
+    ctaLabel: "Solicitar",
+  },
+  {
+    id: "ilimitadas-300gb",
+    price: "19,95€",
+    name: "ILIMITADAS + 300Gb",
+    data: "300Gb",
+    description: "Incluye llamadas ilimitadas a fijos y móviles nacionales. Incluye 300Gb de datos.",
+    features: [
+      "IVA incluido",
+      "Sin permanencia",
+      "Acumula gigas: los datos que no usas este mes, los tienes el siguiente.",
+    ],
+    ctaLabel: "Solicitar",
+  },
+  {
+    id: "ilimitadas-400gb",
+    price: "24,95€",
+    name: "ILIMITADAS + 400Gb",
+    data: "400Gb",
+    description: "Incluye llamadas ilimitadas a fijos y móviles nacionales. Incluye 400Gb de datos.",
+    features: [
+      "IVA incluido",
+      "Sin permanencia",
+      "Acumula gigas: los datos que no usas este mes, los tienes el siguiente.",
+    ],
+    ctaLabel: "Solicitar",
   },
 ];

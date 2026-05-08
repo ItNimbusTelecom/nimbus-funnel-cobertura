@@ -79,7 +79,8 @@ export function DirectContractModal({ plan, onClose }: DirectContractModalProps)
       selectedPlan: {
         id: plan.id,
         name: plan.name,
-        priceLabel: plan.priceLabel,
+        price: plan.price,
+        data: plan.data,
         description: plan.description,
       },
       source: getLeadSource(),
@@ -110,6 +111,9 @@ export function DirectContractModal({ plan, onClose }: DirectContractModalProps)
         <div className="flex items-start justify-between gap-4 border-b border-nimbus-line p-6">
           <div>
             <p className="text-sm font-black uppercase tracking-[0.18em] text-nimbus-orange">{plan.name}</p>
+            <p className="mt-1 text-lg font-black text-nimbus-ink">
+              {plan.price} · {plan.data}
+            </p>
             <h3 className="mt-2 text-2xl font-black text-nimbus-ink">¿Cómo prefieres contratar?</h3>
             <p className="mt-2 text-sm leading-6 text-nimbus-muted">
               Te ayudamos a cerrar la contratación de esta línea móvil y resolver cualquier duda antes de activar el

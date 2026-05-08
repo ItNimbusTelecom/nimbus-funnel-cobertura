@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { trackEvent } from "@/lib/analytics";
-import { mobilePlans, type MobilePlan } from "@/lib/plans";
+import { MOBILE_PLANS, type MobilePlan } from "@/lib/plans";
 import { DirectContractModal } from "./DirectContractModal";
 
 export function MobilePlans() {
@@ -28,18 +28,19 @@ export function MobilePlans() {
           </p>
         </div>
 
-        <div className="mt-10 grid gap-5 md:grid-cols-3">
-          {mobilePlans.map((plan) => (
+        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {MOBILE_PLANS.map((plan) => (
             <article
               key={plan.id}
-              className="flex min-h-[330px] flex-col rounded-lg border border-nimbus-line bg-white p-6 shadow-soft"
+              className="flex min-h-[360px] flex-col rounded-lg border border-nimbus-line bg-white p-6 shadow-soft"
             >
               <div className="flex-1">
                 <h3 className="text-xl font-black text-nimbus-ink">{plan.name}</h3>
-                <p className="mt-3 text-3xl font-black text-nimbus-orange">{plan.priceLabel}</p>
+                <p className="mt-3 text-3xl font-black text-nimbus-orange">{plan.price}</p>
+                <p className="mt-1 text-sm font-black uppercase tracking-[0.14em] text-nimbus-muted">{plan.data}</p>
                 <p className="mt-3 text-nimbus-muted">{plan.description}</p>
                 <ul className="mt-5 space-y-3 text-sm text-nimbus-muted">
-                  {plan.highlights.map((item) => (
+                  {plan.features.map((item) => (
                     <li key={item} className="flex gap-3">
                       <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-orange-100 text-xs font-black text-nimbus-orange">
                         ✓
@@ -54,7 +55,7 @@ export function MobilePlans() {
                 onClick={() => openPlan(plan)}
                 className="mt-7 w-full rounded-full bg-nimbus-orange px-5 py-3 text-sm font-black text-white transition hover:bg-nimbus-orangeDark"
               >
-                Quiero contratar esta opción
+                {plan.ctaLabel}
               </button>
             </article>
           ))}
