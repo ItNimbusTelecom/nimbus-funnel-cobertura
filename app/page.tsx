@@ -1,6 +1,7 @@
 import { CoverageStudyFunnel } from "@/components/CoverageStudyFunnel";
 import { DirectContractBlock } from "@/components/DirectContractBlock";
 import { FAQSection } from "@/components/FAQSection";
+import { FloatingContactButtons } from "@/components/FloatingContactButtons";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { HeroActions } from "@/components/HeroActions";
@@ -159,6 +160,7 @@ export default function Home() {
         <DirectContractBlock />
         <CoverageStudyFunnel />
       </main>
+      <FloatingContactButtons />
       <Footer />
     </>
   );
