@@ -1,5 +1,6 @@
 import { CoverageStudyFunnel } from "@/components/CoverageStudyFunnel";
 import { DirectContractBlock } from "@/components/DirectContractBlock";
+import { FAQSection } from "@/components/FAQSection";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { HeroActions } from "@/components/HeroActions";
@@ -152,6 +153,7 @@ export default function Home() {
         </section>
 
         <MobilePlans />
+        <FAQSection />
         <DirectContractBlock />
         <CoverageStudyFunnel />
       </main>
