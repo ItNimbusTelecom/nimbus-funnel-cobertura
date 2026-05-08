@@ -1,3 +1,7 @@
+"use client";
+
+import { useI18n } from "@/lib/i18n";
+
 type LegalConsentCheckboxProps = {
   checked: boolean;
   onChange: (checked: boolean) => void;
@@ -16,6 +20,7 @@ export function LegalConsentCheckbox({
   id = "legal-consent",
   name = "consent",
 }: LegalConsentCheckboxProps) {
+  const { dictionary } = useI18n();
   const errorId = `${id}-error`;
 
   return (
@@ -32,23 +37,23 @@ export function LegalConsentCheckbox({
           aria-invalid={error ? "true" : undefined}
         />
         <label htmlFor={id}>
-          Acepto que Nimbus Telecom trate mis datos para contactar conmigo sobre mi solicitud, de acuerdo con la{" "}
+          {dictionary.legal.before}{" "}
           <a
             href={PRIVACY_POLICY_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="font-bold text-nimbus-ink underline decoration-nimbus-orange/40 underline-offset-4 transition hover:text-nimbus-orange"
           >
-            Política de privacidad
+            {dictionary.legal.privacy}
           </a>{" "}
-          y el{" "}
+          {dictionary.legal.middle}{" "}
           <a
             href={LEGAL_NOTICE_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="font-bold text-nimbus-ink underline decoration-nimbus-orange/40 underline-offset-4 transition hover:text-nimbus-orange"
           >
-            Aviso legal
+            {dictionary.legal.notice}
           </a>
           .
         </label>

@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import { trackEvent } from "@/lib/analytics";
 import { getElapsedSeconds } from "@/lib/antispam";
+import { useI18n } from "@/lib/i18n";
 import { submitLead } from "@/lib/submitLead";
 import { getLeadSource } from "@/lib/utm";
 import { LegalConsentCheckbox } from "./LegalConsentCheckbox";
@@ -10,33 +11,8 @@ import { VisualIcon } from "./VisualIcon";
 
 type PreferredContact = "phone" | "whatsapp" | "email";
 
-const coverageProblems = [
-  "No tengo cobertura en casa",
-  "No tengo cobertura en el trabajo",
-  "Pierdo cobertura cuando me muevo",
-  "Las llamadas se cortan",
-  "Los datos van lentos",
-  "No estoy seguro, solo sé que me falla",
-];
-
-const locationTypes = [
-  "En una localidad concreta",
-  "En varias zonas",
-  "En carretera o desplazándome",
-  "En interiores, dentro de casa o del trabajo",
-  "No lo tengo claro",
-];
-
-const usageOptions = [
-  "Estoy casi siempre en casa o en el trabajo",
-  "Me muevo mucho durante el día",
-  "Viajo por varias zonas de Girona o Barcelona",
-  "Uso mucho llamadas",
-  "Uso mucho datos móviles",
-  "Un poco de todo",
-];
-
 export function CoverageStudyFunnel() {
+  const { dictionary } = useI18n();
   const [step, setStep] = useState(1);
   const [coverageProblem, setCoverageProblem] = useState("");
   const [problemLocationType, setProblemLocationType] = useState("");
@@ -56,7 +32,7 @@ export function CoverageStudyFunnel() {
   const [completed, setCompleted] = useState(false);
 
   const progress = completed ? 100 : Math.round((step / 5) * 100);
-  const consentError = error === "Necesitamos tu aceptación para contactar contigo." ? error : undefined;
+  const consentError = error === dictionary.form.errors.consent ? error : undefined;
 
   function startIfNeeded() {
     if (step === 1 && !coverageProblem) {
@@ -91,17 +67,17 @@ export function CoverageStudyFunnel() {
     setError("");
 
     if (step === 1 && !coverageProblem) {
-      setError("Selecciona el problema principal de cobertura.");
+      setError(dictionary.form.errors.coverageProblem);
       return;
     }
 
     if (step === 2 && !problemLocationType) {
-      setError("Selecciona dónde te pasa más.");
+      setError(dictionary.form.errors.location);
       return;
     }
 
     if (step === 3 && mobileUsage.length === 0) {
-      setError("Selecciona al menos una forma de uso.");
+      setError(dictionary.form.errors.usage);
       return;
     }
 
@@ -138,16 +114,16 @@ export function CoverageStudyFunnel() {
 
   function validateContact() {
     if (!name.trim()) {
-      return "Indica tu nombre.";
+      return dictionary.form.errors.name;
     }
     if ((preferredContact === "phone" || preferredContact === "whatsapp") && !phone.trim()) {
-      return "Indica un teléfono de contacto.";
+      return dictionary.form.errors.phone;
     }
     if (preferredContact === "email" && !email.trim()) {
-      return "Indica un email de contacto.";
+      return dictionary.form.errors.email;
     }
     if (!consent) {
-      return "Necesitamos tu aceptación para contactar contigo.";
+      return dictionary.form.errors.consent;
     }
     return "";
   }
@@ -199,7 +175,7 @@ export function CoverageStudyFunnel() {
       setCompleted(true);
     } catch (submitError) {
       trackEvent("estudio_cobertura_submit_error", { preferred_contact: preferredContact });
-      setError(submitError instanceof Error ? submitError.message : "No hemos podido enviar la solicitud.");
+      setError(submitError instanceof Error ? submitError.message : dictionary.form.errors.submit);
     } finally {
       setIsSubmitting(false);
     }
@@ -209,24 +185,23 @@ export function CoverageStudyFunnel() {
     <section id="formulario" className="scroll-mt-24 bg-nimbus-soft py-20">
       <div className="mx-auto grid max-w-6xl gap-10 px-5 lg:grid-cols-[0.86fr_1.14fr] lg:items-start">
         <div>
-          <p className="text-sm font-black uppercase tracking-[0.2em] text-nimbus-orange">Estudio de cobertura</p>
+          <p className="text-sm font-black uppercase tracking-[0.2em] text-nimbus-orange">{dictionary.form.eyebrow}</p>
           <h2 className="mt-3 text-3xl font-black tracking-tight text-nimbus-ink md:text-4xl">
-            ¿Quieres que estudiemos tu caso de cobertura?
+            {dictionary.form.title}
           </h2>
-          <p className="mt-4 text-lg leading-8 text-nimbus-muted">
-            Si tienes problemas de cobertura, cuéntanos dónde te pasa y cómo usas el móvil. Revisaremos tu caso y te
-            contactaremos con una recomendación personalizada.
-          </p>
+          <p className="mt-4 text-lg leading-8 text-nimbus-muted">{dictionary.form.text}</p>
           <div className="mt-7 rounded-lg border border-nimbus-line bg-white p-5 text-sm leading-7 text-nimbus-muted">
-            <p className="font-black text-nimbus-ink">Sin rodeos comerciales</p>
-            <p>Nos centramos en entender dónde falla la cobertura y qué opciones tienen más sentido.</p>
+            <p className="font-black text-nimbus-ink">{dictionary.form.noSalesTitle}</p>
+            <p>{dictionary.form.noSalesText}</p>
           </div>
         </div>
 
         <div className="rounded-lg border border-nimbus-line bg-white p-6 shadow-soft">
           <div className="mb-6">
             <div className="flex items-center justify-between text-sm font-bold text-nimbus-muted">
-              <span>{completed ? "Completado" : `Paso ${step} de 5`}</span>
+              <span>
+                {completed ? dictionary.form.completed : `${dictionary.form.stepLabel} ${step} ${dictionary.form.of} 5`}
+              </span>
               <span>{progress}%</span>
             </div>
             <div className="mt-3 h-2 overflow-hidden rounded-full bg-nimbus-soft">
@@ -236,17 +211,14 @@ export function CoverageStudyFunnel() {
 
           {completed ? (
             <div>
-              <h3 className="text-2xl font-black text-nimbus-ink">Solicitud recibida</h3>
-              <p className="mt-3 leading-7 text-nimbus-muted">
-                Gracias. Revisaremos tu caso de cobertura y te enviaremos una propuesta personalizada según lo que nos
-                has contado.
-              </p>
+              <h3 className="text-2xl font-black text-nimbus-ink">{dictionary.form.finalTitle}</h3>
+              <p className="mt-3 leading-7 text-nimbus-muted">{dictionary.form.finalText}</p>
               <dl className="mt-6 grid gap-3 rounded-lg bg-nimbus-soft p-5 text-sm">
-                <SummaryItem label="Problema principal" value={coverageProblem} />
-                <SummaryItem label="Dónde te pasa más" value={problemLocationType} />
-                <SummaryItem label="Zona indicada" value={problemLocationText || "No indicada"} />
-                <SummaryItem label="Preferencia de contacto" value={preferredContactLabel(preferredContact)} />
-                {currentOperator ? <SummaryItem label="Operador actual" value={currentOperator} /> : null}
+                <SummaryItem label={dictionary.form.summary.problem} value={coverageProblem} />
+                <SummaryItem label={dictionary.form.summary.location} value={problemLocationType} />
+                <SummaryItem label={dictionary.form.summary.zone} value={problemLocationText || dictionary.form.summary.notProvided} />
+                <SummaryItem label={dictionary.form.summary.preferredContact} value={preferredContactLabel(preferredContact, dictionary)} />
+                {currentOperator ? <SummaryItem label={dictionary.form.summary.currentOperator} value={currentOperator} /> : null}
               </dl>
               <div className="mt-6 flex flex-col gap-3 sm:flex-row">
                 <button
@@ -254,33 +226,33 @@ export function CoverageStudyFunnel() {
                   onClick={resetFunnel}
                   className="rounded-full border border-nimbus-line px-5 py-3 text-sm font-black text-nimbus-ink transition hover:bg-nimbus-soft"
                 >
-                  Hacer otra consulta
+                  {dictionary.form.another}
                 </button>
                 <a
                   href="#tarifas"
                   className="rounded-full bg-nimbus-orange px-5 py-3 text-center text-sm font-black text-white transition hover:bg-nimbus-orangeDark"
                 >
-                  Ver opciones móviles
+                  {dictionary.form.seePlans}
                 </a>
               </div>
             </div>
           ) : (
             <>
               {step === 1 ? (
-                <QuestionStep title="¿Qué problema de cobertura tienes?">
-                  <SingleChoice options={coverageProblems} value={coverageProblem} onChange={chooseCoverageProblem} />
+                <QuestionStep title={dictionary.form.step1Title}>
+                  <SingleChoice options={dictionary.form.coverageProblems} value={coverageProblem} onChange={chooseCoverageProblem} />
                 </QuestionStep>
               ) : null}
 
               {step === 2 ? (
-                <QuestionStep title="¿Dónde te pasa más?">
-                  <SingleChoice options={locationTypes} value={problemLocationType} onChange={chooseLocationType} />
+                <QuestionStep title={dictionary.form.step2Title}>
+                  <SingleChoice options={dictionary.form.locationTypes} value={problemLocationType} onChange={chooseLocationType} />
                   <label className="mt-5 block text-sm font-bold text-nimbus-ink">
-                    Localidad, zona o lugares donde te falla
+                    {dictionary.form.locationLabel}
                     <textarea
                       value={problemLocationText}
                       onChange={(event) => setProblemLocationText(event.target.value)}
-                      placeholder="Ejemplo: Sils, Vidreres, carretera hacia Girona, dentro de casa, etc."
+                      placeholder={dictionary.form.locationPlaceholder}
                       className="mt-2 min-h-28 w-full rounded-lg border border-nimbus-line px-4 py-3 font-normal text-nimbus-ink"
                     />
                   </label>
@@ -288,9 +260,9 @@ export function CoverageStudyFunnel() {
               ) : null}
 
               {step === 3 ? (
-                <QuestionStep title="¿Cómo usas normalmente el móvil?">
+                <QuestionStep title={dictionary.form.step3Title}>
                   <div className="grid gap-3 sm:grid-cols-2">
-                    {usageOptions.map((option) => (
+                    {dictionary.form.usageOptions.map((option) => (
                       <button
                         key={option}
                         type="button"
@@ -309,24 +281,16 @@ export function CoverageStudyFunnel() {
               ) : null}
 
               {step === 4 ? (
-                <QuestionStep title="Ya tenemos una primera idea de tu caso">
-                  <p className="text-lg leading-8 text-nimbus-muted">
-                    Con lo que nos has contado podemos revisar mejor qué puede estar pasando y qué opción móvil puede
-                    tener más sentido para ti.
-                  </p>
-                  <p className="mt-4 text-sm leading-6 text-nimbus-muted">
-                    Para enviarte el resultado del estudio o comentarlo contigo, necesitamos tus datos de contacto.
-                  </p>
+                <QuestionStep title={dictionary.form.step4Title}>
+                  <p className="text-lg leading-8 text-nimbus-muted">{dictionary.form.step4Text}</p>
+                  <p className="mt-4 text-sm leading-6 text-nimbus-muted">{dictionary.form.step4Secondary}</p>
                 </QuestionStep>
               ) : null}
 
               {step === 5 ? (
                 <form id="coverage-study-contact" onSubmit={submitStudy}>
-                  <QuestionStep title="¿Dónde te enviamos el resultado del estudio?">
-                    <p className="mb-5 text-sm leading-6 text-nimbus-muted">
-                      Te contactaremos solo para revisar tu caso de cobertura y orientarte sobre la opción que mejor
-                      encaje contigo.
-                    </p>
+                  <QuestionStep title={dictionary.form.step5Title}>
+                    <p className="mb-5 text-sm leading-6 text-nimbus-muted">{dictionary.form.step5Text}</p>
                     <div className="grid gap-3 sm:grid-cols-3">
                       {(["phone", "whatsapp", "email"] as PreferredContact[]).map((option) => (
                         <button
@@ -340,7 +304,7 @@ export function CoverageStudyFunnel() {
                           }`}
                         >
                           <VisualIcon name={preferredContactIcon(option)} className="size-4 shrink-0 text-nimbus-orange" />
-                          <span>{preferredContactLabel(option)}</span>
+                          <span>{preferredContactLabel(option, dictionary)}</span>
                         </button>
                       ))}
                     </div>
@@ -358,23 +322,23 @@ export function CoverageStudyFunnel() {
                           aria-hidden="true"
                         />
                       </div>
-                      <Field label="Nombre" value={name} onChange={setName} autoComplete="name" required />
+                      <Field label={dictionary.form.fields.name} value={name} onChange={setName} autoComplete="name" required />
                       <Field
-                        label={preferredContact === "email" ? "Teléfono opcional" : "Teléfono"}
+                        label={preferredContact === "email" ? dictionary.form.fields.phoneOptional : dictionary.form.fields.phone}
                         value={phone}
                         onChange={setPhone}
                         autoComplete="tel"
                         required={preferredContact !== "email"}
                       />
                       <Field
-                        label={preferredContact === "email" ? "Email" : "Email opcional"}
+                        label={preferredContact === "email" ? dictionary.form.fields.email : dictionary.form.fields.emailOptional}
                         value={email}
                         onChange={setEmail}
                         autoComplete="email"
                         required={preferredContact === "email"}
                       />
                       <Field
-                        label="Operador actual opcional"
+                        label={dictionary.form.fields.currentOperator}
                         value={currentOperator}
                         onChange={setCurrentOperator}
                         autoComplete="organization"
@@ -382,7 +346,7 @@ export function CoverageStudyFunnel() {
                     </div>
 
                     <label className="mt-4 block text-sm font-bold text-nimbus-ink">
-                      Comentario adicional opcional
+                      {dictionary.form.fields.additionalComment}
                       <textarea
                         value={additionalComment}
                         onChange={(event) => setAdditionalComment(event.target.value)}
@@ -411,7 +375,7 @@ export function CoverageStudyFunnel() {
                   disabled={step === 1 || isSubmitting}
                   className="rounded-full border border-nimbus-line px-5 py-3 text-sm font-black text-nimbus-ink transition hover:bg-nimbus-soft disabled:cursor-not-allowed disabled:opacity-40"
                 >
-                  Atrás
+                  {dictionary.form.back}
                 </button>
                 {step === 5 ? (
                   <button
@@ -420,7 +384,7 @@ export function CoverageStudyFunnel() {
                     disabled={isSubmitting}
                     className="rounded-full bg-nimbus-orange px-5 py-3 text-sm font-black text-white transition hover:bg-nimbus-orangeDark disabled:cursor-not-allowed disabled:opacity-60"
                   >
-                    {isSubmitting ? "Enviando..." : "Enviar solicitud de estudio"}
+                    {isSubmitting ? dictionary.form.submitting : dictionary.form.submit}
                   </button>
                 ) : (
                   <button
@@ -428,7 +392,7 @@ export function CoverageStudyFunnel() {
                     onClick={nextStep}
                     className="rounded-full bg-nimbus-orange px-5 py-3 text-sm font-black text-white transition hover:bg-nimbus-orangeDark"
                   >
-                    {step === 4 ? "Quiero mi estudio de cobertura" : "Continuar"}
+                    {step === 4 ? dictionary.form.requestStudy : dictionary.form.continue}
                   </button>
                 )}
               </div>
@@ -454,7 +418,7 @@ function SingleChoice({
   value,
   onChange,
 }: {
-  options: string[];
+  options: readonly string[];
   value: string;
   onChange: (value: string) => void;
 }) {
@@ -514,14 +478,8 @@ function SummaryItem({ label, value }: { label: string; value: string }) {
   );
 }
 
-function preferredContactLabel(value: PreferredContact) {
-  if (value === "phone") {
-    return "Teléfono";
-  }
-  if (value === "whatsapp") {
-    return "WhatsApp";
-  }
-  return "Email";
+function preferredContactLabel(value: PreferredContact, dictionary: ReturnType<typeof useI18n>["dictionary"]) {
+  return dictionary.form.contactLabels[value];
 }
 
 function preferredContactIcon(value: PreferredContact) {

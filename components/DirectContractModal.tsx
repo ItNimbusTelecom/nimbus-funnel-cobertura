@@ -3,6 +3,7 @@
 import { FormEvent, useMemo, useState } from "react";
 import { trackEvent } from "@/lib/analytics";
 import { getElapsedSeconds } from "@/lib/antispam";
+import { useI18n } from "@/lib/i18n";
 import { type MobilePlan } from "@/lib/plans";
 import { submitLead as submitLeadRequest } from "@/lib/submitLead";
 import { getLeadSource } from "@/lib/utm";
@@ -16,13 +17,14 @@ type DirectContractModalProps = {
   onClose: () => void;
 };
 
-const contactChoices: Array<{ id: ContactChoice; label: string; icon: "phone" | "message-circle" | "map-pin" }> = [
-  { id: "phone", label: "Que me llaméis", icon: "phone" },
-  { id: "whatsapp", label: "Prefiero WhatsApp", icon: "message-circle" },
-  { id: "office", label: "Quiero acercarme a la oficina", icon: "map-pin" },
+const contactChoices: Array<{ id: ContactChoice; icon: "phone" | "message-circle" | "map-pin" }> = [
+  { id: "phone", icon: "phone" },
+  { id: "whatsapp", icon: "message-circle" },
+  { id: "office", icon: "map-pin" },
 ];
 
 export function DirectContractModal({ plan, onClose }: DirectContractModalProps) {
+  const { dictionary } = useI18n();
   const [choice, setChoice] = useState<ContactChoice>("phone");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -36,7 +38,7 @@ export function DirectContractModal({ plan, onClose }: DirectContractModalProps)
 
   const requiresContact = choice !== "office";
   const preferredContact = useMemo(() => (choice === "office" ? "oficina" : choice), [choice]);
-  const consentError = error === "Necesitamos tu aceptación para contactar contigo." ? error : undefined;
+  const consentError = error === dictionary.modal.errors.consent ? error : undefined;
 
   function selectChoice(nextChoice: ContactChoice) {
     setChoice(nextChoice);
@@ -60,17 +62,17 @@ export function DirectContractModal({ plan, onClose }: DirectContractModalProps)
     setError("");
 
     if (requiresContact && !name.trim()) {
-      setError("Indica tu nombre para que podamos ayudarte.");
+      setError(dictionary.modal.errors.name);
       return;
     }
 
     if (requiresContact && !phone.trim()) {
-      setError("Indica un teléfono de contacto.");
+      setError(dictionary.modal.errors.phone);
       return;
     }
 
     if (!consent) {
-      setError("Necesitamos tu aceptación para contactar contigo.");
+      setError(dictionary.modal.errors.consent);
       return;
     }
 
@@ -111,7 +113,7 @@ export function DirectContractModal({ plan, onClose }: DirectContractModalProps)
       setSent(true);
     } catch (submitError) {
       trackEvent("contratacion_submit_error", { plan_id: plan.id });
-      setError(submitError instanceof Error ? submitError.message : "No hemos podido enviar la solicitud.");
+      setError(submitError instanceof Error ? submitError.message : dictionary.modal.errors.submit);
     } finally {
       setIsSubmitting(false);
     }
@@ -126,17 +128,14 @@ export function DirectContractModal({ plan, onClose }: DirectContractModalProps)
             <p className="mt-1 text-lg font-black text-nimbus-ink">
               {plan.price} · {plan.data}
             </p>
-            <h3 className="mt-2 text-2xl font-black text-nimbus-ink">¿Cómo prefieres contratar?</h3>
-            <p className="mt-2 text-sm leading-6 text-nimbus-muted">
-              Te ayudamos a cerrar la contratación de esta línea móvil y resolver cualquier duda antes de activar el
-              servicio.
-            </p>
+            <h3 className="mt-2 text-2xl font-black text-nimbus-ink">{dictionary.modal.title}</h3>
+            <p className="mt-2 text-sm leading-6 text-nimbus-muted">{dictionary.modal.text}</p>
           </div>
           <button
             type="button"
             onClick={onClose}
             className="grid size-10 shrink-0 place-items-center rounded-full border border-nimbus-line text-xl text-nimbus-muted transition hover:bg-nimbus-soft"
-            aria-label="Cerrar"
+            aria-label={dictionary.modal.close}
           >
             ×
           </button>
@@ -144,16 +143,14 @@ export function DirectContractModal({ plan, onClose }: DirectContractModalProps)
 
         {sent ? (
           <div className="p-6">
-            <h4 className="text-xl font-black text-nimbus-ink">Solicitud recibida</h4>
-            <p className="mt-3 text-nimbus-muted">
-              Gracias. Revisaremos tu solicitud de contratación y te contactaremos para avanzar con la opción elegida.
-            </p>
+            <h4 className="text-xl font-black text-nimbus-ink">{dictionary.modal.sentTitle}</h4>
+            <p className="mt-3 text-nimbus-muted">{dictionary.modal.sentText}</p>
             <button
               type="button"
               onClick={onClose}
               className="mt-6 rounded-full bg-nimbus-orange px-5 py-3 text-sm font-black text-white transition hover:bg-nimbus-orangeDark"
             >
-              Cerrar
+              {dictionary.modal.close}
             </button>
           </div>
         ) : (
@@ -171,17 +168,17 @@ export function DirectContractModal({ plan, onClose }: DirectContractModalProps)
                   }`}
                 >
                   <VisualIcon name={item.icon} className="size-4 shrink-0 text-nimbus-orange" />
-                  <span>{item.label}</span>
+                  <span>{dictionary.modal.choices[item.id]}</span>
                 </button>
               ))}
             </div>
 
             {choice === "office" ? (
               <div className="mt-6 rounded-lg border border-nimbus-line bg-nimbus-soft p-5 text-sm leading-7 text-nimbus-muted">
-                <p className="font-black text-nimbus-ink">Puedes venir a nuestra oficina en C/Major, 42 - Sils.</p>
-                <p>Teléfono: 972 85 01 55</p>
-                <p>WhatsApp: 622 81 26 04</p>
-                <p className="mt-2">Si quieres, deja tus datos y te tendremos el caso preparado antes de venir.</p>
+                <p className="font-black text-nimbus-ink">{dictionary.modal.officeTitle}</p>
+                <p>{dictionary.modal.officePhone}</p>
+                <p>{dictionary.modal.officeWhatsapp}</p>
+                <p className="mt-2">{dictionary.modal.officeText}</p>
               </div>
             ) : null}
 
@@ -199,7 +196,7 @@ export function DirectContractModal({ plan, onClose }: DirectContractModalProps)
                 />
               </div>
               <label className="text-sm font-bold text-nimbus-ink">
-                Nombre {requiresContact ? "" : "(opcional)"}
+                {dictionary.modal.name} {requiresContact ? "" : dictionary.modal.optional}
                 <input
                   value={name}
                   onChange={(event) => setName(event.target.value)}
@@ -208,7 +205,7 @@ export function DirectContractModal({ plan, onClose }: DirectContractModalProps)
                 />
               </label>
               <label className="text-sm font-bold text-nimbus-ink">
-                Teléfono {requiresContact ? "" : "(opcional)"}
+                {dictionary.modal.phone} {requiresContact ? "" : dictionary.modal.optional}
                 <input
                   value={phone}
                   onChange={(event) => setPhone(event.target.value)}
@@ -217,7 +214,7 @@ export function DirectContractModal({ plan, onClose }: DirectContractModalProps)
                 />
               </label>
               <label className="text-sm font-bold text-nimbus-ink sm:col-span-2">
-                Email opcional
+                {dictionary.modal.emailOptional}
                 <input
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
@@ -240,7 +237,7 @@ export function DirectContractModal({ plan, onClose }: DirectContractModalProps)
                 onClick={openWhatsapp}
                 className="mt-5 w-full rounded-full border border-nimbus-orange px-5 py-3 text-sm font-black text-nimbus-orange transition hover:bg-orange-50"
               >
-                Abrir WhatsApp
+                {dictionary.modal.openWhatsapp}
               </button>
             ) : null}
 
@@ -253,7 +250,7 @@ export function DirectContractModal({ plan, onClose }: DirectContractModalProps)
               disabled={isSubmitting}
               className="mt-5 w-full rounded-full bg-nimbus-orange px-5 py-3 text-sm font-black text-white transition hover:bg-nimbus-orangeDark disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {isSubmitting ? "Enviando..." : "Enviar solicitud"}
+              {isSubmitting ? dictionary.modal.submitting : dictionary.modal.submit}
             </button>
           </form>
         )}

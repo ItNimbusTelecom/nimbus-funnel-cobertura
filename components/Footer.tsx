@@ -1,9 +1,15 @@
+"use client";
+
 import Image from "next/image";
 import { NIMBUS_LOGO_URL } from "@/lib/brand";
 import { CONTACT_INFO, LEGAL_LINKS, SOCIAL_LINKS } from "@/lib/contact";
+import { useI18n } from "@/lib/i18n";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 import { VisualIcon } from "./VisualIcon";
 
 export function Footer() {
+  const { dictionary } = useI18n();
+
   return (
     <footer id="contacto" className="border-t border-nimbus-line bg-white">
       <div className="mx-auto grid max-w-6xl gap-9 px-5 py-10 md:grid-cols-2 lg:grid-cols-[1.15fr_1fr_1fr_1.1fr]">
@@ -18,12 +24,15 @@ export function Footer() {
           />
           <p className="mt-4 text-lg font-black text-nimbus-ink">Nimbus Telecom</p>
           <p className="mt-2 max-w-xs text-sm leading-6 text-nimbus-muted">
-            Partner tecnológico local para hogares y negocios.
+            {dictionary.footer.claim}
           </p>
+          <div className="mt-5">
+            <LanguageSwitcher />
+          </div>
         </div>
 
         <div>
-          <h2 className="text-sm font-black uppercase tracking-[0.16em] text-nimbus-ink">Contacto</h2>
+          <h2 className="text-sm font-black uppercase tracking-[0.16em] text-nimbus-ink">{dictionary.footer.contact}</h2>
           <ul className="mt-4 space-y-2 text-sm text-nimbus-muted">
             <li>
               <a
@@ -61,7 +70,7 @@ export function Footer() {
         </div>
 
         <div>
-          <h2 className="text-sm font-black uppercase tracking-[0.16em] text-nimbus-ink">Oficina</h2>
+          <h2 className="text-sm font-black uppercase tracking-[0.16em] text-nimbus-ink">{dictionary.footer.office}</h2>
           <div className="mt-4 space-y-3 text-sm leading-6 text-nimbus-muted">
             <a
               className="inline-flex items-start gap-2 transition hover:text-nimbus-orange"
@@ -74,17 +83,19 @@ export function Footer() {
             </a>
             <p className="flex items-start gap-2">
               <VisualIcon name="clock" className="mt-0.5 size-4 shrink-0" />
-              <span>{CONTACT_INFO.hours}</span>
+              <span>{dictionary.footer.hours}</span>
             </p>
             <p className="flex items-start gap-2">
               <VisualIcon name="clock" className="mt-0.5 size-4 shrink-0" />
-              <span>{CONTACT_INFO.commercialHours}</span>
+              <span>{dictionary.footer.commercialHours}</span>
             </p>
           </div>
         </div>
 
         <div>
-          <h2 className="text-sm font-black uppercase tracking-[0.16em] text-nimbus-ink">Redes y legal</h2>
+          <h2 className="text-sm font-black uppercase tracking-[0.16em] text-nimbus-ink">
+            {dictionary.footer.socialLegal}
+          </h2>
           <div className="mt-4 flex flex-wrap gap-3">
             {SOCIAL_LINKS.map((link) => (
               <a
@@ -100,10 +111,10 @@ export function Footer() {
             ))}
           </div>
           <ul className="mt-5 space-y-2 text-sm text-nimbus-muted">
-            {LEGAL_LINKS.map((link) => (
+            {LEGAL_LINKS.map((link, index) => (
               <li key={link.href}>
                 <a className="transition hover:text-nimbus-orange" href={link.href} target="_blank" rel="noopener noreferrer">
-                  {link.label}
+                  {dictionary.footer.legalLinks[index]}
                 </a>
               </li>
             ))}
@@ -112,8 +123,8 @@ export function Footer() {
       </div>
       <div className="border-t border-nimbus-line">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-5 py-5 text-sm text-nimbus-muted sm:flex-row sm:items-center sm:justify-between">
-          <p>© 2025 Nimbus Telecom. Todos los derechos reservados.</p>
-          <p>Atención desde Sils</p>
+          <p>© 2025 Nimbus Telecom. {dictionary.footer.rights}</p>
+          <p>{dictionary.footer.from}</p>
         </div>
       </div>
     </footer>

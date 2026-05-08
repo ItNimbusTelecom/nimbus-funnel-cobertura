@@ -2,16 +2,18 @@
 
 import { useState } from "react";
 import { trackEvent } from "@/lib/analytics";
+import { useI18n } from "@/lib/i18n";
 
 const VIDEO_URL = "";
 
 export function VideoSection() {
+  const { dictionary } = useI18n();
   const [placeholderMessage, setPlaceholderMessage] = useState("");
   const videoType = getVideoType(VIDEO_URL);
 
   function handlePlaceholderClick() {
     trackEvent("video_play_clicked", { status: "placeholder" });
-    setPlaceholderMessage("El vídeo estará disponible próximamente.");
+    setPlaceholderMessage(dictionary.video.message);
   }
 
   function handleAvailableClick() {
@@ -22,36 +24,28 @@ export function VideoSection() {
     <section id="video" className="scroll-mt-24 bg-nimbus-soft py-20">
       <div className="mx-auto grid max-w-6xl gap-10 px-5 lg:grid-cols-[0.92fr_1.08fr] lg:items-center">
         <div>
-          <p className="text-sm font-black uppercase tracking-[0.2em] text-nimbus-orange">Vídeo explicativo</p>
+          <p className="text-sm font-black uppercase tracking-[0.2em] text-nimbus-orange">{dictionary.video.eyebrow}</p>
           <h2 className="mt-3 text-3xl font-black tracking-tight text-nimbus-ink md:text-4xl">
-            Una SIM, más opciones de cobertura
+            {dictionary.video.title}
           </h2>
-          <p className="mt-4 text-lg font-bold leading-8 text-nimbus-ink">
-            La cobertura móvil no es magia ni intuición. Depende de las redes disponibles, de la zona, del interior de
-            los edificios, del terminal y de cómo te mueves.
-          </p>
+          <p className="mt-4 text-lg font-bold leading-8 text-nimbus-ink">{dictionary.video.subtitle}</p>
           <div className="mt-5 space-y-4 text-lg leading-8 text-nimbus-muted">
-            <p>
-              En muchas compañías, tu línea móvil trabaja sobre una sola red. Si esa red no funciona bien donde tú
-              estás, puedes seguir teniendo el mismo problema aunque cambies de tarifa.
-            </p>
-            <p>
-              En Nimbus trabajamos con líneas móviles con triple cobertura: Movistar, Orange y MásMóvil/Yoigo. Esto nos
-              permite ampliar las opciones disponibles y orientarte mejor según tu caso.
-            </p>
+            {dictionary.video.paragraphs.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
           </div>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
               href="#formulario"
               className="rounded-full bg-nimbus-orange px-5 py-3 text-center text-sm font-black text-white transition hover:bg-nimbus-orangeDark"
             >
-              Quiero que estudiéis mi caso
+              {dictionary.video.studyCta}
             </a>
             <a
               href="#tarifas"
               className="rounded-full border border-nimbus-line bg-white px-5 py-3 text-center text-sm font-black text-nimbus-ink transition hover:border-nimbus-orange hover:text-nimbus-orange"
             >
-              Ver tarifas móviles
+              {dictionary.video.plansCta}
             </a>
           </div>
         </div>
@@ -62,23 +56,21 @@ export function VideoSection() {
               <button
                 type="button"
                 onClick={handlePlaceholderClick}
-                aria-label="Vídeo explicativo sobre triple cobertura"
+                aria-label={dictionary.video.aria}
                 className="group grid aspect-video w-full place-items-center bg-white p-6 text-center transition hover:bg-orange-50"
               >
                 <span className="grid size-20 place-items-center rounded-full bg-nimbus-orange text-white shadow-soft transition group-hover:bg-nimbus-orangeDark">
                   <span className="ml-1 h-0 w-0 border-y-[13px] border-l-[20px] border-y-transparent border-l-white" />
                 </span>
-                <span className="mt-5 block text-lg font-black text-nimbus-ink">Vídeo pendiente</span>
-                <span className="mt-2 block text-sm font-bold text-nimbus-muted">
-                  Vídeo explicativo pendiente de añadir.
-                </span>
+                <span className="mt-5 block text-lg font-black text-nimbus-ink">{dictionary.video.pending}</span>
+                <span className="mt-2 block text-sm font-bold text-nimbus-muted">{dictionary.video.pendingText}</span>
               </button>
             ) : null}
 
             {videoType === "iframe" ? (
               <iframe
                 src={toEmbedUrl(VIDEO_URL)}
-                title="Vídeo explicativo sobre triple cobertura"
+                title={dictionary.video.aria}
                 className="aspect-video w-full"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
@@ -91,7 +83,7 @@ export function VideoSection() {
                 className="aspect-video w-full bg-black"
                 controls
                 onPlay={handleAvailableClick}
-                aria-label="Vídeo explicativo sobre triple cobertura"
+                aria-label={dictionary.video.aria}
               >
                 <source src={VIDEO_URL} type="video/mp4" />
               </video>
@@ -103,8 +95,7 @@ export function VideoSection() {
           ) : null}
 
           <p className="mt-4 text-sm leading-6 text-nimbus-muted">
-            Pronto añadiremos aquí una explicación breve para que puedas ver, en menos de un minuto, por qué una línea
-            con triple cobertura puede ayudarte si sueles quedarte sin señal o tienes llamadas que se cortan.
+            {dictionary.video.below}
           </p>
         </div>
       </div>

@@ -1,14 +1,21 @@
+"use client";
+
 import Image from "next/image";
 import { NIMBUS_LOGO_URL } from "@/lib/brand";
-
-const navItems = [
-  { label: "Solución", href: "#solucion" },
-  { label: "Tarifas", href: "#tarifas" },
-  { label: "Estudiar mi caso", href: "#formulario" },
-  { label: "Contacto", href: "#contacto" },
-];
+import { useI18n } from "@/lib/i18n";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 export function Header() {
+  const { dictionary } = useI18n();
+  const navItems = [
+    { label: dictionary.nav.solution, href: "#solucion" },
+    { label: dictionary.nav.plans, href: "#tarifas" },
+    { label: dictionary.nav.study, href: "#formulario" },
+    { label: dictionary.nav.reviews, href: "#opiniones" },
+    { label: dictionary.nav.faq, href: "#faq" },
+    { label: dictionary.nav.contact, href: "#contacto" },
+  ];
+
   return (
     <header className="sticky top-0 z-40 border-b border-nimbus-line/80 bg-white/92 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-5 px-5 py-4">
@@ -22,7 +29,7 @@ export function Header() {
             unoptimized
           />
         </a>
-        <nav className="hidden items-center gap-1 md:flex" aria-label="Navegación principal">
+        <nav className="hidden items-center gap-1 lg:flex" aria-label={dictionary.nav.aria}>
           {navItems.map((item) => (
             <a
               key={item.href}
@@ -33,12 +40,15 @@ export function Header() {
             </a>
           ))}
         </nav>
-        <a
-          href="#formulario"
-          className="rounded-full bg-nimbus-orange px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-nimbus-orangeDark"
-        >
-          Revisar cobertura
-        </a>
+        <div className="flex items-center gap-2">
+          <LanguageSwitcher compact />
+          <a
+            href="#formulario"
+            className="rounded-full bg-nimbus-orange px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-nimbus-orangeDark"
+          >
+            {dictionary.nav.primaryCta}
+          </a>
+        </div>
       </div>
     </header>
   );

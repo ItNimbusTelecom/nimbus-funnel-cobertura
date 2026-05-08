@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useI18n } from "@/lib/i18n";
 
 const WHATSAPP_URL =
   "https://wa.me/34622812604?text=Hola%20Nimbus%2C%20tengo%20una%20duda%20sobre%20cobertura%20m%C3%B3vil.%20Si%20est%C3%A1is%20fuera%20del%20horario%20comercial%2C%20entiendo%20que%20me%20responder%C3%A9is%20en%20cuanto%20sea%20posible.";
 
 export function FloatingContactButtons() {
   const [isAssistantOpen, setIsAssistantOpen] = useState(false);
+  const { dictionary } = useI18n();
 
   useEffect(() => {
     if (!isAssistantOpen) {
@@ -34,28 +36,28 @@ export function FloatingContactButtons() {
         >
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-sm font-black uppercase tracking-[0.16em] text-nimbus-orange">IA</p>
+              <p className="text-sm font-black uppercase tracking-[0.16em] text-nimbus-orange">
+                {dictionary.floating.assistantEyebrow}
+              </p>
               <h2 id="assistant-title" className="mt-1 text-xl font-black text-nimbus-ink">
-                Asistente Nimbus
+                {dictionary.floating.assistantTitle}
               </h2>
             </div>
             <button
               type="button"
               onClick={() => setIsAssistantOpen(false)}
               className="grid size-9 shrink-0 place-items-center rounded-full border border-nimbus-line text-xl text-nimbus-muted transition hover:bg-nimbus-soft focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nimbus-orange"
-              aria-label="Cerrar asistente Nimbus"
+              aria-label={dictionary.floating.closeAria}
             >
               ×
             </button>
           </div>
 
           <p className="mt-4 leading-7 text-nimbus-muted">
-            Nuestro asistente puede ayudarte con dudas rápidas sobre cobertura móvil, tarifas y cómo funciona el estudio
-            de cobertura.
+            {dictionary.floating.assistantText}
           </p>
           <p className="mt-3 rounded-lg bg-nimbus-soft p-4 text-sm font-bold leading-6 text-nimbus-ink">
-            El asistente IA estará disponible próximamente. Mientras tanto, puedes usar WhatsApp o solicitar un estudio
-            de cobertura.
+            {dictionary.floating.assistantPending}
           </p>
 
           <div className="mt-5 grid gap-3">
@@ -64,7 +66,7 @@ export function FloatingContactButtons() {
               onClick={() => setIsAssistantOpen(false)}
               className="rounded-full bg-nimbus-orange px-5 py-3 text-center text-sm font-black text-white transition hover:bg-nimbus-orangeDark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nimbus-orange"
             >
-              Pedir estudio de cobertura
+              {dictionary.floating.study}
             </a>
             <a
               href={WHATSAPP_URL}
@@ -72,14 +74,14 @@ export function FloatingContactButtons() {
               rel="noopener noreferrer"
               className="rounded-full border border-nimbus-line px-5 py-3 text-center text-sm font-black text-nimbus-ink transition hover:border-nimbus-orange hover:text-nimbus-orange focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nimbus-orange"
             >
-              Escribir por WhatsApp
+              {dictionary.floating.whatsapp}
             </a>
             <button
               type="button"
               onClick={() => setIsAssistantOpen(false)}
               className="rounded-full px-5 py-3 text-sm font-black text-nimbus-muted transition hover:bg-nimbus-soft hover:text-nimbus-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nimbus-orange"
             >
-              Cerrar
+              {dictionary.floating.close}
             </button>
           </div>
         </div>
@@ -88,7 +90,7 @@ export function FloatingContactButtons() {
       <button
         type="button"
         onClick={() => setIsAssistantOpen(true)}
-        aria-label="Abrir asistente Nimbus"
+        aria-label={dictionary.floating.openAssistant}
         className="fixed bottom-5 left-4 z-[45] inline-flex items-center gap-2 rounded-full border border-nimbus-line bg-white px-4 py-3 text-sm font-black text-nimbus-ink shadow-soft transition hover:border-nimbus-orange hover:text-nimbus-orange focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nimbus-orange sm:left-6"
       >
         <BotIcon />
@@ -99,7 +101,7 @@ export function FloatingContactButtons() {
         href={WHATSAPP_URL}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Escribir a Nimbus por WhatsApp"
+        aria-label={dictionary.floating.whatsappAria}
         className="fixed bottom-5 right-4 z-[45] inline-flex items-center gap-2 rounded-full bg-[#25D366] px-4 py-3 text-sm font-black text-white shadow-soft transition hover:bg-[#1FAF55] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#25D366] sm:right-6"
       >
         <WhatsappIcon />
