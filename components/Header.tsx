@@ -1,3 +1,6 @@
+import Image from "next/image";
+import { NIMBUS_LOGO_URL } from "@/lib/brand";
+
 const navItems = [
   { label: "Solución", href: "#solucion" },
   { label: "Tarifas", href: "#tarifas" },
@@ -9,11 +12,15 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 border-b border-nimbus-line/80 bg-white/92 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-5 px-5 py-4">
-        <a href="#" className="flex flex-col leading-tight">
-          <span className="text-lg font-black tracking-tight text-nimbus-ink">Nimbus Telecom</span>
-          <span className="text-xs font-semibold uppercase tracking-[0.16em] text-nimbus-muted">
-            Partner tecnológico local
-          </span>
+        <a href="#" className="flex shrink-0 items-center" aria-label="Nimbus Telecom">
+          <Image
+            src={NIMBUS_LOGO_URL}
+            alt="Nimbus Telecom"
+            className="h-auto w-[136px] object-contain sm:w-[158px]"
+            width={223}
+            height={70}
+            unoptimized
+          />
         </a>
         <nav className="hidden items-center gap-1 md:flex" aria-label="Navegación principal">
           {navItems.map((item) => (
