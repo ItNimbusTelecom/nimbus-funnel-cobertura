@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { trackEvent } from "@/lib/analytics";
+import { getElapsedSeconds } from "@/lib/antispam";
 import { submitLead } from "@/lib/submitLead";
 import { getLeadSource } from "@/lib/utm";
 import { LegalConsentCheckbox } from "./LegalConsentCheckbox";
@@ -47,6 +48,8 @@ export function CoverageStudyFunnel() {
   const [currentOperator, setCurrentOperator] = useState("");
   const [additionalComment, setAdditionalComment] = useState("");
   const [consent, setConsent] = useState(false);
+  const [company, setCompany] = useState("");
+  const [formStartedAt, setFormStartedAt] = useState(() => new Date().toISOString());
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [completed, setCompleted] = useState(false);
@@ -56,6 +59,7 @@ export function CoverageStudyFunnel() {
 
   function startIfNeeded() {
     if (step === 1 && !coverageProblem) {
+      setFormStartedAt(new Date().toISOString());
       trackEvent("estudio_cobertura_started", { funnel: "cobertura-movil" });
     }
   }
@@ -125,6 +129,8 @@ export function CoverageStudyFunnel() {
     setCurrentOperator("");
     setAdditionalComment("");
     setConsent(false);
+    setCompany("");
+    setFormStartedAt(new Date().toISOString());
     setError("");
     setCompleted(false);
   }
@@ -156,6 +162,7 @@ export function CoverageStudyFunnel() {
 
     setIsSubmitting(true);
     trackEvent("estudio_cobertura_contact_submitted", { preferred_contact: preferredContact });
+    const elapsedSeconds = getElapsedSeconds(formStartedAt);
 
     const payload = {
       funnel: "cobertura-movil",
@@ -163,6 +170,11 @@ export function CoverageStudyFunnel() {
       version: "mvp-2",
       submittedAt: new Date().toISOString(),
       source: getLeadSource(),
+      antiSpam: {
+        formStartedAt,
+        elapsedSeconds,
+        honeypot: company,
+      },
       answers: {
         coverageProblem,
         problemLocationType,
@@ -332,6 +344,18 @@ export function CoverageStudyFunnel() {
                     </div>
 
                     <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                      <div className="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden="true">
+                        <label htmlFor="coverage-study-company">Empresa</label>
+                        <input
+                          id="coverage-study-company"
+                          name="company"
+                          value={company}
+                          onChange={(event) => setCompany(event.target.value)}
+                          autoComplete="off"
+                          tabIndex={-1}
+                          aria-hidden="true"
+                        />
+                      </div>
                       <Field label="Nombre" value={name} onChange={setName} autoComplete="name" required />
                       <Field
                         label={preferredContact === "email" ? "Teléfono opcional" : "Teléfono"}

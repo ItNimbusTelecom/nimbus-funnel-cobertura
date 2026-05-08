@@ -2,6 +2,7 @@
 
 import { FormEvent, useMemo, useState } from "react";
 import { trackEvent } from "@/lib/analytics";
+import { getElapsedSeconds } from "@/lib/antispam";
 import { type MobilePlan } from "@/lib/plans";
 import { submitLead as submitLeadRequest } from "@/lib/submitLead";
 import { getLeadSource } from "@/lib/utm";
@@ -26,6 +27,8 @@ export function DirectContractModal({ plan, onClose }: DirectContractModalProps)
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [consent, setConsent] = useState(false);
+  const [company, setCompany] = useState("");
+  const [formStartedAt] = useState(() => new Date().toISOString());
   const [error, setError] = useState("");
   const [sent, setSent] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -72,6 +75,7 @@ export function DirectContractModal({ plan, onClose }: DirectContractModalProps)
 
     setIsSubmitting(true);
     trackEvent("contratacion_directa_submitted", { plan_id: plan.id, preferred_contact: preferredContact });
+    const elapsedSeconds = getElapsedSeconds(formStartedAt);
 
     const payload = {
       funnel: "cobertura-movil",
@@ -86,6 +90,11 @@ export function DirectContractModal({ plan, onClose }: DirectContractModalProps)
         description: plan.description,
       },
       source: getLeadSource(),
+      antiSpam: {
+        formStartedAt,
+        elapsedSeconds,
+        honeypot: company,
+      },
       contact: {
         name,
         phone,
@@ -175,6 +184,18 @@ export function DirectContractModal({ plan, onClose }: DirectContractModalProps)
             ) : null}
 
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              <div className="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden="true">
+                <label htmlFor="direct-contract-company">Empresa</label>
+                <input
+                  id="direct-contract-company"
+                  name="company"
+                  value={company}
+                  onChange={(event) => setCompany(event.target.value)}
+                  autoComplete="off"
+                  tabIndex={-1}
+                  aria-hidden="true"
+                />
+              </div>
               <label className="text-sm font-bold text-nimbus-ink">
                 Nombre {requiresContact ? "" : "(opcional)"}
                 <input

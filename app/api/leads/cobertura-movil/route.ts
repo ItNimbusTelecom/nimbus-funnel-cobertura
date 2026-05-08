@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getElapsedSeconds, isHoneypotFilled, isTooFast } from "@/lib/antispam";
 
 type LeadPayload = {
   funnel?: unknown;
   leadType?: unknown;
   selectedPlan?: unknown;
+  company?: unknown;
+  antiSpam?: {
+    formStartedAt?: unknown;
+    elapsedSeconds?: unknown;
+    honeypot?: unknown;
+  };
   answers?: {
     coverageProblem?: unknown;
     problemLocationType?: unknown;
@@ -26,6 +33,16 @@ const validLeadTypes = ["estudio-cobertura", "contratacion-directa"];
 export async function POST(request: NextRequest) {
   try {
     const payload = (await request.json()) as LeadPayload;
+    const spamReason = getSpamReason(payload);
+
+    if (spamReason) {
+      if (process.env.NODE_ENV !== "production") {
+        console.log(spamReason);
+      }
+
+      return NextResponse.json({ ok: true, spam: true });
+    }
+
     const validationError = validatePayload(payload);
 
     if (validationError) {
@@ -67,6 +84,45 @@ export async function POST(request: NextRequest) {
       { status: 500 },
     );
   }
+}
+
+function getSpamReason(payload: LeadPayload) {
+  if (isHoneypotFilled(payload.antiSpam?.honeypot) || isHoneypotFilled(payload.company)) {
+    return "Spam rejected by honeypot";
+  }
+
+  const elapsedSeconds = getNumericElapsedSeconds(payload.antiSpam?.elapsedSeconds);
+  if (isTooFast(elapsedSeconds)) {
+    return "Spam rejected by timing";
+  }
+
+  const formStartedAt = payload.antiSpam?.formStartedAt;
+  if (typeof formStartedAt === "string" || typeof formStartedAt === "number") {
+    const backendElapsedSeconds = getElapsedSeconds(formStartedAt);
+
+    if (backendElapsedSeconds === null) {
+      if (process.env.NODE_ENV !== "production") {
+        console.warn("Invalid anti-spam formStartedAt");
+      }
+      return "";
+    }
+
+    if (isTooFast(backendElapsedSeconds)) {
+      return "Spam rejected by timing";
+    }
+  } else if (process.env.NODE_ENV !== "production") {
+    console.warn("Missing anti-spam formStartedAt");
+  }
+
+  return "";
+}
+
+function getNumericElapsedSeconds(value: unknown) {
+  if (typeof value === "number" && Number.isFinite(value)) {
+    return value;
+  }
+
+  return null;
 }
 
 function validatePayload(payload: LeadPayload) {
