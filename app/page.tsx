@@ -129,6 +129,7 @@ function HomeContent() {
                     alt="Antena de telecomunicaciones en una zona elevada"
                     width={382}
                     height={510}
+                    unoptimized
                     className="h-full w-full object-cover"
                   />
                   <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-nimbus-ink/70 to-transparent p-5">

@@ -46,6 +46,7 @@ export function LocalServiceSection() {
                 alt="Oficina de Nimbus Telecom en Sils"
                 width={680}
                 height={483}
+                unoptimized
                 className="aspect-[16/10] w-full object-cover"
               />
             </div>
