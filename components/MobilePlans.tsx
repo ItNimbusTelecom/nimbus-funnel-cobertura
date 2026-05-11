@@ -25,9 +25,15 @@ export function MobilePlans() {
         return;
       }
 
+      const firstPlan = carousel.firstElementChild;
+      const lastPlan = carousel.lastElementChild;
+      const carouselRect = carousel.getBoundingClientRect();
       const maxScrollLeft = carousel.scrollWidth - carousel.clientWidth;
-      setCanScrollLeft(carousel.scrollLeft > 8);
-      setCanScrollRight(carousel.scrollLeft < maxScrollLeft - 8);
+      const firstPlanLeft = firstPlan?.getBoundingClientRect().left ?? carouselRect.left;
+      const lastPlanRight = lastPlan?.getBoundingClientRect().right ?? carouselRect.right;
+
+      setCanScrollLeft(firstPlanLeft < carouselRect.left - 4);
+      setCanScrollRight(lastPlanRight > carouselRect.right + 4 && carousel.scrollLeft < maxScrollLeft - 4);
     }
 
     updateScrollState();
