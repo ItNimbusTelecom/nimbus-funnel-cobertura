@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { trackEvent } from "@/lib/analytics";
 import { useI18n } from "@/lib/i18n";
 import { MOBILE_PLANS, type MobilePlan } from "@/lib/plans";
@@ -9,12 +9,51 @@ import { VisualIcon } from "./VisualIcon";
 
 export function MobilePlans() {
   const [selectedPlan, setSelectedPlan] = useState<MobilePlan | null>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+  const carouselRef = useRef<HTMLDivElement>(null);
   const { dictionary } = useI18n();
+
+  useEffect(() => {
+    const carousel = carouselRef.current;
+    if (!carousel) {
+      return;
+    }
+
+    function updateScrollState() {
+      if (!carousel) {
+        return;
+      }
+
+      const maxScrollLeft = carousel.scrollWidth - carousel.clientWidth;
+      setCanScrollLeft(carousel.scrollLeft > 8);
+      setCanScrollRight(carousel.scrollLeft < maxScrollLeft - 8);
+    }
+
+    updateScrollState();
+    carousel.addEventListener("scroll", updateScrollState, { passive: true });
+    window.addEventListener("resize", updateScrollState);
+
+    return () => {
+      carousel.removeEventListener("scroll", updateScrollState);
+      window.removeEventListener("resize", updateScrollState);
+    };
+  }, []);
 
   function openPlan(plan: MobilePlan) {
     trackEvent("tarifa_movil_card_clicked", { plan_id: plan.id, plan_name: plan.name });
     trackEvent("contratacion_modal_opened", { plan_id: plan.id, plan_name: plan.name });
     setSelectedPlan(plan);
+  }
+
+  function scrollPlans(direction: "left" | "right") {
+    const carousel = carouselRef.current;
+    if (!carousel) {
+      return;
+    }
+
+    const distance = Math.round(carousel.clientWidth * 0.85);
+    carousel.scrollBy({ left: direction === "right" ? distance : -distance, behavior: "smooth" });
   }
 
   return (
@@ -28,46 +67,88 @@ export function MobilePlans() {
           <p className="mt-4 text-lg leading-8 text-nimbus-muted">{dictionary.plans.text}</p>
         </div>
 
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {MOBILE_PLANS.map((plan) => (
-            <article
-              key={plan.id}
-              className="flex min-h-[360px] flex-col rounded-lg border border-nimbus-line bg-white p-6 shadow-soft"
-            >
-              <div className="flex-1">
-                <h3 className="text-xl font-black text-nimbus-ink">{plan.name}</h3>
-                <p className="mt-3 text-3xl font-black text-nimbus-orange">{plan.price}</p>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-50 px-3 py-1 text-xs font-black text-nimbus-orange">
-                    <VisualIcon name="database" className="size-3.5" />
-                    {plan.data}
-                  </span>
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-nimbus-soft px-3 py-1 text-xs font-black text-nimbus-muted">
-                    <VisualIcon name="phone" className="size-3.5" />
-                    {dictionary.plans.callsBadge}
-                  </span>
-                </div>
-                <p className="mt-3 text-nimbus-muted">{dictionary.plans.description(plan.data)}</p>
-                <ul className="mt-5 space-y-3 text-sm text-nimbus-muted">
-                  {dictionary.plans.features.map((item, index) => (
-                    <li key={item} className="flex gap-3">
-                      <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-orange-100 text-xs font-black text-nimbus-orange">
-                        <PlanFeatureIcon index={index} />
-                      </span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <button
-                type="button"
-                onClick={() => openPlan(plan)}
-                className="mt-7 w-full rounded-full bg-nimbus-orange px-5 py-3 text-sm font-black text-white transition hover:bg-nimbus-orangeDark"
+        <div className="relative mt-10">
+          <div
+            aria-hidden={!canScrollLeft}
+            className={`pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-white via-white/90 to-transparent transition-opacity ${
+              canScrollLeft ? "opacity-100" : "opacity-0"
+            }`}
+          />
+          <div
+            aria-hidden={!canScrollRight}
+            className={`pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-white via-white/90 to-transparent transition-opacity ${
+              canScrollRight ? "opacity-100" : "opacity-0"
+            }`}
+          />
+
+          <button
+            type="button"
+            onClick={() => scrollPlans("left")}
+            disabled={!canScrollLeft}
+            aria-label={dictionary.plans.scrollLeft}
+            className="absolute left-2 top-1/2 z-20 grid size-11 -translate-y-1/2 place-items-center rounded-full border border-nimbus-line bg-white text-nimbus-ink shadow-soft transition hover:border-nimbus-orange hover:text-nimbus-orange disabled:pointer-events-none disabled:opacity-0"
+          >
+            <VisualIcon name="chevron-up" className="size-5 -rotate-90" />
+          </button>
+          <button
+            type="button"
+            onClick={() => scrollPlans("right")}
+            disabled={!canScrollRight}
+            aria-label={dictionary.plans.scrollRight}
+            className="absolute right-2 top-1/2 z-20 grid size-11 -translate-y-1/2 place-items-center rounded-full border border-nimbus-line bg-white text-nimbus-ink shadow-soft transition hover:border-nimbus-orange hover:text-nimbus-orange disabled:pointer-events-none disabled:opacity-0"
+          >
+            <VisualIcon name="chevron-down" className="size-5 -rotate-90" />
+          </button>
+
+          <div
+            ref={carouselRef}
+            className="-mx-5 flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth px-5 pb-4 [scrollbar-width:thin] [scrollbar-color:#f26a21_#f3f4f6]"
+          >
+            {MOBILE_PLANS.map((plan) => (
+              <article
+                key={plan.id}
+                className="flex min-h-[390px] w-[82vw] max-w-[340px] shrink-0 snap-start flex-col rounded-lg border border-nimbus-line bg-white p-6 shadow-soft sm:w-[46vw] lg:w-[31%]"
               >
-                {dictionary.plans.cta}
-              </button>
-            </article>
-          ))}
+                <div className="flex-1">
+                  <h3 className="text-xl font-black text-nimbus-ink">{plan.name}</h3>
+                  <p className="mt-3 text-3xl font-black text-nimbus-orange">{plan.price}</p>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-50 px-3 py-1 text-xs font-black text-nimbus-orange">
+                      <VisualIcon name="database" className="size-3.5" />
+                      {plan.data}
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-nimbus-soft px-3 py-1 text-xs font-black text-nimbus-muted">
+                      <VisualIcon name="phone" className="size-3.5" />
+                      {dictionary.plans.callsBadge}
+                    </span>
+                  </div>
+                  <p className="mt-3 text-nimbus-muted">{dictionary.plans.description(plan.data)}</p>
+                  <ul className="mt-5 space-y-3 text-sm text-nimbus-muted">
+                    {dictionary.plans.features.map((item, index) => (
+                      <li key={item} className="flex gap-3">
+                        <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-orange-100 text-xs font-black text-nimbus-orange">
+                          <PlanFeatureIcon index={index} />
+                        </span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => openPlan(plan)}
+                  className="mt-7 w-full rounded-full bg-nimbus-orange px-5 py-3 text-sm font-black text-white transition hover:bg-nimbus-orangeDark"
+                >
+                  {dictionary.plans.cta}
+                </button>
+              </article>
+            ))}
+          </div>
+
+          <p className="mt-3 flex items-center gap-2 text-sm font-bold text-nimbus-muted">
+            <span className="h-px w-8 bg-nimbus-orange" aria-hidden="true" />
+            {dictionary.plans.carouselHint}
+          </p>
         </div>
       </div>
 

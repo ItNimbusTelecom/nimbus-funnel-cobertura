@@ -1,6 +1,7 @@
 "use client";
 
 import { CoverageStudyFunnel } from "@/components/CoverageStudyFunnel";
+import { CookieConsent } from "@/components/CookieConsent";
 import { DirectContractBlock } from "@/components/DirectContractBlock";
 import { FAQSection } from "@/components/FAQSection";
 import { FloatingContactButtons } from "@/components/FloatingContactButtons";
@@ -155,6 +156,7 @@ function HomeContent() {
         <CoverageStudyFunnel />
       </main>
       <FloatingContactButtons />
+      <CookieConsent />
       <Footer />
     </>
   );

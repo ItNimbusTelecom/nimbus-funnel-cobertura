@@ -120,6 +120,9 @@ export const translations = {
         "Puedes ver nuestras opciones móviles y contratar directamente. Si tienes un problema concreto de cobertura, también puedes pedirnos que estudiemos tu caso antes de recomendarte una opción.",
       callsBadge: "Llamadas",
       cta: "Solicitar",
+      scrollLeft: "Ver tarifas anteriores",
+      scrollRight: "Ver más tarifas",
+      carouselHint: "Desliza o usa las flechas para ver más tarifas",
       description: (data: string) =>
         `Incluye llamadas ilimitadas a fijos y móviles nacionales. Incluye ${data} de datos.`,
       features: [
@@ -312,6 +315,16 @@ export const translations = {
       closeAria: "Cerrar asistente Nimbus",
       whatsappAria: "Escribir a Nimbus por WhatsApp",
     },
+    cookies: {
+      eyebrow: "Cookies",
+      text:
+        "Utilizamos cookies propias y de terceros para mejorar la experiencia y analizar el uso del sitio. Al navegar por esta web aceptas su uso. Puedes consultar más información en la",
+      cookiesPolicy: "Política de cookies",
+      privacyPolicy: "Política de privacidad",
+      legalNotice: "Aviso legal",
+      and: "y el",
+      accept: "Aceptar",
+    },
   },
   ca: {
     language: { ariaLabel: "Seleccionar idioma" },
@@ -419,6 +432,9 @@ export const translations = {
         "Pots veure les nostres opcions mòbils i contractar directament. Si tens un problema concret de cobertura, també pots demanar-nos que estudiem el teu cas abans de recomanar-te una opció.",
       callsBadge: "Trucades",
       cta: "Sol·licitar",
+      scrollLeft: "Veure tarifes anteriors",
+      scrollRight: "Veure més tarifes",
+      carouselHint: "Fes lliscar o usa les fletxes per veure més tarifes",
       description: (data: string) =>
         `Inclou trucades il·limitades a fixos i mòbils nacionals. Inclou ${data} de dades.`,
       features: [
@@ -609,6 +625,16 @@ export const translations = {
       closeAria: "Tancar assistent Nimbus",
       whatsappAria: "Escriure a Nimbus per WhatsApp",
     },
+    cookies: {
+      eyebrow: "Cookies",
+      text:
+        "Fem servir cookies pròpies i de tercers per millorar l’experiència i analitzar l’ús del lloc. En navegar per aquesta web n’acceptes l’ús. Pots consultar més informació a la",
+      cookiesPolicy: "Política de cookies",
+      privacyPolicy: "Política de privacitat",
+      legalNotice: "l’Avís legal",
+      and: "i",
+      accept: "Acceptar",
+    },
   },
   en: {
     language: { ariaLabel: "Select language" },
@@ -716,6 +742,9 @@ export const translations = {
         "You can view our mobile options and request one directly. If you have a specific coverage problem, you can also ask us to review your case before recommending an option.",
       callsBadge: "Calls",
       cta: "Request",
+      scrollLeft: "View previous plans",
+      scrollRight: "View more plans",
+      carouselHint: "Swipe or use the arrows to view more plans",
       description: (data: string) =>
         `Includes unlimited calls to national landlines and mobiles. Includes ${data} of data.`,
       features: [
@@ -904,6 +933,16 @@ export const translations = {
       close: "Close",
       closeAria: "Close Nimbus assistant",
       whatsappAria: "Write to Nimbus on WhatsApp",
+    },
+    cookies: {
+      eyebrow: "Cookies",
+      text:
+        "We use first-party and third-party cookies to improve the experience and analyze site usage. By browsing this website, you accept their use. You can find more information in the",
+      cookiesPolicy: "Cookie Policy",
+      privacyPolicy: "Privacy Policy",
+      legalNotice: "Legal Notice",
+      and: "and the",
+      accept: "Accept",
     },
   },
 } as const;
