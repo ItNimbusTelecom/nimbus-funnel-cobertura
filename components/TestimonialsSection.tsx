@@ -19,10 +19,9 @@ export function TestimonialsSection() {
         </div>
 
         <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-          {/* Testimonios provisionales para validar diseño. Sustituir por testimonios reales antes de publicar en producción. */}
-          {dictionary.testimonials.items.map(([text, name, location]) => (
+          {dictionary.testimonials.items.map(([text, name]) => (
             <article
-              key={`${name}-${location}-${text}`}
+              key={`${name}-${text}`}
               className="flex min-h-[260px] flex-col rounded-lg border border-nimbus-line bg-nimbus-soft p-6"
             >
               <div className="grid size-11 place-items-center rounded-full bg-white text-3xl font-black leading-none text-nimbus-orange">
@@ -31,10 +30,6 @@ export function TestimonialsSection() {
               <p className="mt-5 flex-1 text-lg font-bold leading-8 text-nimbus-ink">“{text}”</p>
               <div className="mt-6 border-t border-nimbus-line pt-4">
                 <p className="font-black text-nimbus-ink">{name}</p>
-                <p className="mt-1 text-sm font-bold text-nimbus-muted">{location}</p>
-                <p className="mt-3 inline-flex rounded-full bg-white px-3 py-1 text-xs font-black uppercase tracking-[0.12em] text-nimbus-orange">
-                  {dictionary.testimonials.badge}
-                </p>
               </div>
             </article>
           ))}

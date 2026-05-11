@@ -154,15 +154,14 @@ export const translations = {
       title: "Clientes que querían dejar de pelearse con la cobertura",
       subtitle:
         "Cuando alguien llega a Nimbus con un problema de cobertura, muchas veces no busca solo una tarifa. Busca que alguien escuche, entienda qué está pasando y le recomiende con criterio.",
-      badge: "Caso habitual",
       ctaText: "¿Tienes un problema parecido?",
       studyCta: "Quiero que estudiéis mi caso",
       plansCta: "Ver tarifas móviles",
       items: [
-        ["Me explicaron por qué fallaba la cobertura en casa y me dieron una alternativa clara, sin intentar venderme cualquier cosa.", "Cliente particular", "Sils"],
-        ["Por fin pude hablar con alguien que entendía el problema. No era solo cambiar de tarifa, era saber qué red me convenía.", "Cliente particular", "Zona Girona"],
-        ["Me ayudaron a elegir la línea según dónde uso realmente el móvil, no solo por precio.", "Cliente particular", "La Selva"],
-        ["Venía cansado de llamar y que me ofrecieran más datos. En Nimbus primero me preguntaron qué me pasaba.", "Cliente particular", "Girona"],
+        ["Buena cobertura.", "Santiago Canton Membrado"],
+        ["Trato muy cercano y se preocupan mucho por buscar la mejor oferta y propuesta según tus necesidades.", "Saül Segura"],
+        ["Operador cercano, rápido y efectivo. Atención en catalán sin esperas.", "Dimas SC"],
+        ["Gran servicio y atención al cliente. Con las grandes compañías telefónicas cuesta mucho que te atiendan cuando tienes un problema y con ellos esto no ocurre.", "Rosa Girbent i Costey"],
       ],
     },
     directBlock: {
@@ -453,15 +452,14 @@ export const translations = {
       title: "Clients que volien deixar de barallar-se amb la cobertura",
       subtitle:
         "Quan algú arriba a Nimbus amb un problema de cobertura, moltes vegades no busca només una tarifa. Busca que algú l’escolti, entengui què està passant i li recomani amb criteri.",
-      badge: "Cas habitual",
       ctaText: "Tens un problema semblant?",
       studyCta: "Vull que estudieu el meu cas",
       plansCta: "Veure tarifes mòbils",
       items: [
-        ["Em van explicar per què fallava la cobertura a casa i em van donar una alternativa clara, sense intentar vendre’m qualsevol cosa.", "Client particular", "Sils"],
-        ["Per fi vaig poder parlar amb algú que entenia el problema. No era només canviar de tarifa, era saber quina xarxa em convenia.", "Client particular", "Zona Girona"],
-        ["Em van ajudar a triar la línia segons on faig servir realment el mòbil, no només pel preu.", "Client particular", "La Selva"],
-        ["Venia cansat de trucar i que m’oferissin més dades. A Nimbus primer em van preguntar què em passava.", "Client particular", "Girona"],
+        ["Buena cobertura.", "Santiago Canton Membrado"],
+        ["Trato muy cercano y se preocupan mucho por buscar la mejor oferta y propuesta según tus necesidades.", "Saül Segura"],
+        ["Operador cercano, rápido y efectivo. Atención en catalán sin esperas.", "Dimas SC"],
+        ["Gran servicio y atención al cliente. Con las grandes compañías telefónicas cuesta mucho que te atiendan cuando tienes un problema y con ellos esto no ocurre.", "Rosa Girbent i Costey"],
       ],
     },
     directBlock: {
@@ -749,15 +747,14 @@ export const translations = {
       title: "Customers who wanted to stop fighting with coverage",
       subtitle:
         "When someone comes to Nimbus with a coverage problem, they often are not just looking for a plan. They want someone to listen, understand what is happening and recommend with judgement.",
-      badge: "Common case",
       ctaText: "Have a similar problem?",
       studyCta: "I want you to review my case",
       plansCta: "View mobile plans",
       items: [
-        ["They explained why coverage was failing at home and gave me a clear alternative, without trying to sell me anything at all costs.", "Private customer", "Sils"],
-        ["I finally spoke to someone who understood the problem. It was not just changing plan, it was knowing which network suited me.", "Private customer", "Girona area"],
-        ["They helped me choose the line based on where I actually use my mobile, not just on price.", "Private customer", "La Selva"],
-        ["I was tired of calling and being offered more data. At Nimbus they first asked me what was happening.", "Private customer", "Girona"],
+        ["Buena cobertura.", "Santiago Canton Membrado"],
+        ["Trato muy cercano y se preocupan mucho por buscar la mejor oferta y propuesta según tus necesidades.", "Saül Segura"],
+        ["Operador cercano, rápido y efectivo. Atención en catalán sin esperas.", "Dimas SC"],
+        ["Gran servicio y atención al cliente. Con las grandes compañías telefónicas cuesta mucho que te atiendan cuando tienes un problema y con ellos esto no ocurre.", "Rosa Girbent i Costey"],
       ],
     },
     directBlock: {
