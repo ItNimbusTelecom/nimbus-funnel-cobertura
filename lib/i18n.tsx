@@ -132,7 +132,7 @@ export const translations = {
       eyebrow: "Dudas habituales",
       title: "Dudas habituales antes de cambiar de línea móvil",
       subtitle:
-        "Si tienes problemas de cobertura, es normal tener dudas antes de cambiar. Aquí respondemos las más frecuentes con claridad.",
+        "Haz clic en una duda y el asistente Nimbus se abrirá para ayudarte con esa pregunta.",
       ctaText: "¿Sigues teniendo dudas sobre tu cobertura?",
       studyCta: "Quiero que estudiéis mi caso",
       plansCta: "Ver tarifas móviles",
@@ -305,6 +305,7 @@ export const translations = {
         "Nuestro asistente puede ayudarte con dudas rápidas sobre cobertura móvil, tarifas y cómo funciona el estudio de cobertura.",
       assistantPending:
         "El asistente IA estará disponible próximamente. Mientras tanto, puedes usar WhatsApp o solicitar un estudio de cobertura.",
+      selectedQuestion: "Pregunta seleccionada",
       study: "Pedir estudio de cobertura",
       whatsapp: "Escribir por WhatsApp",
       close: "Cerrar",
@@ -430,7 +431,7 @@ export const translations = {
       eyebrow: "Dubtes habituals",
       title: "Dubtes habituals abans de canviar de línia mòbil",
       subtitle:
-        "Si tens problemes de cobertura, és normal tenir dubtes abans de canviar. Aquí responem els més freqüents amb claredat.",
+        "Fes clic en un dubte i l’assistent Nimbus s’obrirà per ajudar-te amb aquesta pregunta.",
       ctaText: "Encara tens dubtes sobre la teva cobertura?",
       studyCta: "Vull que estudieu el meu cas",
       plansCta: "Veure tarifes mòbils",
@@ -601,6 +602,7 @@ export const translations = {
         "El nostre assistent et pot ajudar amb dubtes ràpids sobre cobertura mòbil, tarifes i com funciona l’estudi de cobertura.",
       assistantPending:
         "L’assistent IA estarà disponible pròximament. Mentrestant, pots usar WhatsApp o sol·licitar un estudi de cobertura.",
+      selectedQuestion: "Pregunta seleccionada",
       study: "Demanar estudi de cobertura",
       whatsapp: "Escriure per WhatsApp",
       close: "Tancar",
@@ -725,7 +727,7 @@ export const translations = {
     faq: {
       eyebrow: "Common questions",
       title: "Common questions before changing mobile line",
-      subtitle: "If you have coverage problems, it is normal to have doubts before switching. Here we answer the most common ones clearly.",
+      subtitle: "Click a question and the Nimbus assistant will open to help you with it.",
       ctaText: "Still have questions about your coverage?",
       studyCta: "I want you to review my case",
       plansCta: "View mobile plans",
@@ -896,6 +898,7 @@ export const translations = {
         "Our assistant can help you with quick questions about mobile coverage, plans and how the coverage review works.",
       assistantPending:
         "The AI assistant will be available soon. In the meantime, you can use WhatsApp or request a coverage review.",
+      selectedQuestion: "Selected question",
       study: "Request coverage review",
       whatsapp: "Write on WhatsApp",
       close: "Close",

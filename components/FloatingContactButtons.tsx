@@ -8,7 +8,19 @@ const WHATSAPP_URL =
 
 export function FloatingContactButtons() {
   const [isAssistantOpen, setIsAssistantOpen] = useState(false);
+  const [assistantQuestion, setAssistantQuestion] = useState("");
   const { dictionary } = useI18n();
+
+  useEffect(() => {
+    function openAssistant(event: Event) {
+      const question = (event as CustomEvent<{ question?: string }>).detail?.question;
+      setAssistantQuestion(typeof question === "string" ? question : "");
+      setIsAssistantOpen(true);
+    }
+
+    window.addEventListener("nimbus:open-assistant", openAssistant);
+    return () => window.removeEventListener("nimbus:open-assistant", openAssistant);
+  }, []);
 
   useEffect(() => {
     if (!isAssistantOpen) {
@@ -56,6 +68,14 @@ export function FloatingContactButtons() {
           <p className="mt-4 leading-7 text-nimbus-muted">
             {dictionary.floating.assistantText}
           </p>
+          {assistantQuestion ? (
+            <div className="mt-3 rounded-lg border border-orange-100 bg-orange-50 p-4">
+              <p className="text-xs font-black uppercase tracking-[0.16em] text-nimbus-orange">
+                {dictionary.floating.selectedQuestion}
+              </p>
+              <p className="mt-2 text-sm font-black leading-6 text-nimbus-ink">{assistantQuestion}</p>
+            </div>
+          ) : null}
           <p className="mt-3 rounded-lg bg-nimbus-soft p-4 text-sm font-bold leading-6 text-nimbus-ink">
             {dictionary.floating.assistantPending}
           </p>
@@ -89,7 +109,10 @@ export function FloatingContactButtons() {
 
       <button
         type="button"
-        onClick={() => setIsAssistantOpen(true)}
+        onClick={() => {
+          setAssistantQuestion("");
+          setIsAssistantOpen(true);
+        }}
         aria-label={dictionary.floating.openAssistant}
         className="fixed bottom-5 left-4 z-[45] inline-flex items-center gap-2 rounded-full border border-nimbus-line bg-white px-4 py-3 text-sm font-black text-nimbus-ink shadow-soft transition hover:border-nimbus-orange hover:text-nimbus-orange focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nimbus-orange sm:left-6"
       >

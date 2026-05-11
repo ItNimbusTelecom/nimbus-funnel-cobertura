@@ -1,21 +1,15 @@
 "use client";
 
-import { useState } from "react";
 import { trackEvent } from "@/lib/analytics";
 import { useI18n } from "@/lib/i18n";
 import { VisualIcon } from "./VisualIcon";
 
 export function FAQSection() {
-  const [openIndex, setOpenIndex] = useState(0);
   const { dictionary } = useI18n();
 
-  function toggleQuestion(index: number) {
-    const nextIndex = openIndex === index ? -1 : index;
-    setOpenIndex(nextIndex);
-
-    if (nextIndex === index) {
-      trackEvent("faq_item_opened", { question: dictionary.faq.items[index][0] });
-    }
+  function openAssistantWithQuestion(question: string) {
+    window.dispatchEvent(new CustomEvent("nimbus:open-assistant", { detail: { question } }));
+    trackEvent("faq_item_opened", { question });
   }
 
   return (
@@ -29,34 +23,25 @@ export function FAQSection() {
           <p className="mt-4 text-lg leading-8 text-nimbus-muted">{dictionary.faq.subtitle}</p>
         </div>
 
-        <div className="mt-10 grid gap-4">
-          {dictionary.faq.items.map(([question, answer], index) => {
-            const isOpen = openIndex === index;
-            const contentId = `faq-answer-${index}`;
-
-            return (
-              <article key={question} className="rounded-lg border border-nimbus-line bg-white shadow-sm">
-                <button
-                  type="button"
-                  onClick={() => toggleQuestion(index)}
-                  aria-expanded={isOpen}
-                  aria-controls={contentId}
-                  className="flex w-full items-start justify-between gap-4 px-5 py-5 text-left transition hover:text-nimbus-orange md:px-6"
-                >
-                  <span className="text-lg font-black text-nimbus-ink">{question}</span>
-                  <span
-                    aria-hidden="true"
-                    className="grid size-8 shrink-0 place-items-center rounded-full bg-orange-100 text-nimbus-orange"
-                  >
-                    <VisualIcon name={isOpen ? "chevron-up" : "chevron-down"} className="size-4" />
-                  </span>
-                </button>
-                <div id={contentId} hidden={!isOpen} className="px-5 pb-5 md:px-6">
-                  <p className="max-w-4xl leading-7 text-nimbus-muted">{answer}</p>
-                </div>
-              </article>
-            );
-          })}
+        <div className="mt-10 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+          {dictionary.faq.items.map(([question]) => (
+            <button
+              key={question}
+              type="button"
+              onClick={() => openAssistantWithQuestion(question)}
+              className="group flex min-h-28 items-start justify-between gap-4 rounded-lg border border-nimbus-line bg-white p-5 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-nimbus-orange hover:shadow-soft focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nimbus-orange"
+            >
+              <span className="text-base font-black leading-6 text-nimbus-ink transition group-hover:text-nimbus-orange">
+                {question}
+              </span>
+              <span
+                aria-hidden="true"
+                className="grid size-8 shrink-0 place-items-center rounded-full bg-orange-100 text-nimbus-orange"
+              >
+                <VisualIcon name="message-circle" className="size-4" />
+              </span>
+            </button>
+          ))}
         </div>
 
         <div className="mt-10 rounded-lg border border-orange-100 bg-white p-6 md:flex md:items-center md:justify-between md:gap-8">
