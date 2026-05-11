@@ -16,6 +16,7 @@ import { MobilePlans } from "@/components/MobilePlans";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { VideoSection } from "@/components/VideoSection";
 import { VisualIcon } from "@/components/VisualIcon";
+import { NIMBUS_ANTENNA_IMAGE } from "@/lib/brand";
 import { I18nProvider, useI18n } from "@/lib/i18n";
 
 const solutionChecks = [
@@ -124,7 +125,7 @@ function HomeContent() {
               <div className="mt-8 overflow-hidden rounded-lg border border-white bg-white shadow-soft">
                 <div className="relative aspect-[4/3]">
                   <Image
-                    src="/brand/nimbus-antenna.webp"
+                    src={NIMBUS_ANTENNA_IMAGE}
                     alt="Antena de telecomunicaciones en una zona elevada"
                     width={382}
                     height={510}
