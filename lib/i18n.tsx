@@ -7,10 +7,10 @@ export type Locale = "es" | "ca" | "en";
 export const DEFAULT_LOCALE: Locale = "es";
 export const LOCALE_STORAGE_KEY = "nimbus-locale";
 
-export const LOCALES: Array<{ code: Locale; label: string; shortLabel: string; flag: string }> = [
-  { code: "es", label: "Español", shortLabel: "ES", flag: "🇪🇸" },
-  { code: "ca", label: "Català", shortLabel: "CA", flag: "CAT" },
-  { code: "en", label: "English", shortLabel: "EN", flag: "🇬🇧" },
+export const LOCALES: Array<{ code: Locale; label: string }> = [
+  { code: "es", label: "Español" },
+  { code: "ca", label: "Català" },
+  { code: "en", label: "English" },
 ];
 
 export const translations = {
