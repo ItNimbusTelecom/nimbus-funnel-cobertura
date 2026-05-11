@@ -1,6 +1,7 @@
 "use client";
 
 import { trackEvent } from "@/lib/analytics";
+import { openChatbase } from "@/lib/chatbase";
 import { useI18n } from "@/lib/i18n";
 import { VisualIcon } from "./VisualIcon";
 
@@ -8,7 +9,7 @@ export function FAQSection() {
   const { dictionary } = useI18n();
 
   function openAssistantWithQuestion(question: string) {
-    window.dispatchEvent(new CustomEvent("nimbus:open-assistant", { detail: { question } }));
+    openChatbase();
     trackEvent("faq_item_opened", { question });
   }
 

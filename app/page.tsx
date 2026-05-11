@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+import { ChatbaseEmbed } from "@/components/ChatbaseEmbed";
 import { CoverageStudyFunnel } from "@/components/CoverageStudyFunnel";
 import { CookieConsent } from "@/components/CookieConsent";
 import { DirectContractBlock } from "@/components/DirectContractBlock";
@@ -41,6 +43,7 @@ function HomeContent() {
   return (
     <>
       <LandingTracker />
+      <ChatbaseEmbed />
       <Header />
       <main>
         <section className="relative overflow-hidden py-16 md:py-24">
@@ -118,6 +121,22 @@ function HomeContent() {
                 {dictionary.solution.title}
               </h2>
               <p className="mt-4 text-lg leading-8 text-nimbus-muted">{dictionary.solution.text}</p>
+              <div className="mt-8 overflow-hidden rounded-lg border border-white bg-white shadow-soft">
+                <div className="relative aspect-[4/3]">
+                  <Image
+                    src="/brand/nimbus-antenna.webp"
+                    alt="Antena de telecomunicaciones en una zona elevada"
+                    width={382}
+                    height={510}
+                    className="h-full w-full object-cover"
+                  />
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-nimbus-ink/70 to-transparent p-5">
+                    <p className="max-w-sm text-sm font-black uppercase tracking-[0.16em] text-white">
+                      {dictionary.solution.imageCaption}
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
               {dictionary.solution.checks.map((item, index) => (

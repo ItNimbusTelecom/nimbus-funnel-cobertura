@@ -220,6 +220,10 @@ export function CoverageStudyFunnel() {
             <div>
               <h3 className="text-2xl font-black text-nimbus-ink">{dictionary.form.finalTitle}</h3>
               <p className="mt-3 leading-7 text-nimbus-muted">{dictionary.form.finalText}</p>
+              <div className="mt-5 grid gap-3 rounded-lg border border-orange-100 bg-orange-50 p-5">
+                <p className="leading-7 text-nimbus-ink">{dictionary.form.finalResponseTime}</p>
+                <p className="leading-7 text-nimbus-ink">{dictionary.form.finalDiagnosticPurpose}</p>
+              </div>
               <dl className="mt-6 grid gap-3 rounded-lg bg-nimbus-soft p-5 text-sm">
                 <SummaryItem label={dictionary.form.summary.problem} value={coverageProblem} />
                 <SummaryItem label={dictionary.form.summary.location} value={problemLocationType} />

@@ -1,7 +1,6 @@
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://nimbustelecom.es";
 
-// Sustituir /public/og-cobertura-movil.jpg por la creatividad final de la campaña.
-export const OG_IMAGE_URL = "/og-cobertura-movil.jpg";
+export const OG_IMAGE_URL = "/og-cobertura-movil.png";
 
 export const DEFAULT_TITLE = "Problemas de cobertura móvil | Nimbus Telecom";
 export const DEFAULT_DESCRIPTION =

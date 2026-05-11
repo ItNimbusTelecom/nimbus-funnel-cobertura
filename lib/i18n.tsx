@@ -61,6 +61,7 @@ export const translations = {
       title: "La diferencia: más de una red para buscar mejor cobertura",
       text:
         "Muchas compañías trabajan con una única red móvil. En Nimbus trabajamos con líneas móviles con triple cobertura: Movistar, Orange y MásMóvil/Yoigo. Esto nos permite orientarte mejor según tu caso y buscar una opción con más posibilidades reales de funcionar bien donde la necesitas.",
+      imageCaption: "Más opciones reales de conexión",
       checks: [
         "Triple cobertura",
         "Llamadas ilimitadas",
@@ -262,6 +263,10 @@ export const translations = {
       finalTitle: "Solicitud recibida",
       finalText:
         "Gracias. Revisaremos tu caso de cobertura y te enviaremos una propuesta personalizada según lo que nos has contado.",
+      finalResponseTime:
+        "Te responderemos a la brevedad dentro del siguiente horario de oficina disponible.",
+      finalDiagnosticPurpose:
+        "El diagnóstico nos ayuda a entender dónde te falla la cobertura y a orientarte sobre qué tarifa móvil puede encajar mejor con tu caso antes de contratar.",
       summary: {
         problem: "Problema principal",
         location: "Dónde te pasa más",
@@ -373,6 +378,7 @@ export const translations = {
       title: "La diferència: més d’una xarxa per buscar millor cobertura",
       text:
         "Moltes companyies treballen amb una única xarxa mòbil. A Nimbus treballem amb línies mòbils amb triple cobertura: Movistar, Orange i MásMóvil/Yoigo. Això ens permet orientar-te millor segons el teu cas i buscar una opció amb més possibilitats reals de funcionar bé on la necessites.",
+      imageCaption: "Més opcions reals de connexió",
       checks: [
         "Triple cobertura",
         "Trucades il·limitades",
@@ -572,6 +578,10 @@ export const translations = {
       submitting: "Enviant...",
       finalTitle: "Sol·licitud rebuda",
       finalText: "Gràcies. Revisarem el teu cas de cobertura i t’enviarem una proposta personalitzada segons el que ens has explicat.",
+      finalResponseTime:
+        "Et respondrem al més aviat possible dins del següent horari d’oficina disponible.",
+      finalDiagnosticPurpose:
+        "El diagnòstic ens ajuda a entendre on et falla la cobertura i a orientar-te sobre quina tarifa mòbil pot encaixar millor amb el teu cas abans de contractar.",
       summary: {
         problem: "Problema principal",
         location: "On et passa més",
@@ -683,6 +693,7 @@ export const translations = {
       title: "The difference: more than one network to look for better coverage",
       text:
         "Many companies work with a single mobile network. At Nimbus we work with mobile lines with triple coverage: Movistar, Orange and MásMóvil/Yoigo. This lets us guide you better according to your case and look for an option with more real possibilities of working well where you need it.",
+      imageCaption: "More real connection options",
       checks: [
         "Triple coverage",
         "Unlimited calls",
@@ -881,6 +892,10 @@ export const translations = {
       submitting: "Sending...",
       finalTitle: "Request received",
       finalText: "Thank you. We will review your coverage case and send you a personalised proposal based on what you told us.",
+      finalResponseTime:
+        "We will reply as soon as possible during the next available office hours.",
+      finalDiagnosticPurpose:
+        "The diagnosis helps us understand where coverage fails and guide you on which mobile plan may fit your case better before subscribing.",
       summary: {
         problem: "Main problem",
         location: "Where it happens most",

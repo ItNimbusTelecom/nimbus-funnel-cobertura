@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { VisualIcon } from "./VisualIcon";
 import { useI18n } from "@/lib/i18n";
 
@@ -38,6 +39,15 @@ export function LocalServiceSection() {
             <p className="mt-4 text-lg leading-8 text-nimbus-muted">
               {dictionary.localService.text}
             </p>
+            <div className="mt-8 overflow-hidden rounded-lg border border-nimbus-line bg-white shadow-soft">
+              <Image
+                src="/brand/nimbus-storefront.webp"
+                alt="Oficina de Nimbus Telecom en Sils"
+                width={680}
+                height={483}
+                className="aspect-[16/10] w-full object-cover"
+              />
+            </div>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
