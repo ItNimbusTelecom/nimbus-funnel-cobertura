@@ -304,6 +304,9 @@ export const translations = {
       commercialHours: "Atención comercial preferente de 09:00 a 18:00",
       rights: "Todos los derechos reservados.",
       from: "Atención desde Sils",
+      legalAria: "Enlaces legales",
+      officialLinksPrefix: "Contacto, ubicación, horarios y redes sociales",
+      officialLinksCta: "Ver enlaces oficiales",
     },
     floating: {
       openAssistant: "Abrir asistente Nimbus",
@@ -619,6 +622,9 @@ export const translations = {
       commercialHours: "Atenció comercial preferent de 09:00 a 18:00",
       rights: "Tots els drets reservats.",
       from: "Atenció des de Sils",
+      legalAria: "Enllaços legals",
+      officialLinksPrefix: "Contacte, ubicació, horaris i xarxes socials",
+      officialLinksCta: "Veure enllaços oficials",
     },
     floating: {
       openAssistant: "Obrir assistent Nimbus",
@@ -933,6 +939,9 @@ export const translations = {
       commercialHours: "Preferred sales support from 09:00 to 18:00",
       rights: "All rights reserved.",
       from: "Support from Sils",
+      legalAria: "Legal links",
+      officialLinksPrefix: "Contact, location, opening hours and social media",
+      officialLinksCta: "View official links",
     },
     floating: {
       openAssistant: "Open Nimbus assistant",
