@@ -5,9 +5,9 @@ import { CONTACT_INFO } from "@/lib/contact";
 import { NIMBUS_LOGO_URL } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: "Ofertas reales en fibra, móvil e internet | Nimbus Telecom",
+  title: "Ofertes reals en fibra, mòbil i internet | Nimbus Telecom",
   description:
-    "Promoción Nimbus Telecom con ofertas de fibra óptica, móvil, internet rural, alarma Ajax y Servei Express TV.",
+    "Promoció Nimbus Telecom amb ofertes de fibra òptica, mòbil, internet rural, alarma Ajax i Servei Express TV.",
   robots: {
     index: false,
     follow: false,
@@ -15,9 +15,9 @@ export const metadata: Metadata = {
 };
 
 const ruralPlans = [
-  { speed: "10MB", price: "29,95€" },
-  { speed: "15MB", price: "39,95€" },
-  { speed: "30MB", price: "49,95€" },
+  { speed: "10 Mb", price: "29,95€" },
+  { speed: "15 Mb", price: "39,95€" },
+  { speed: "30 Mb", price: "49,95€" },
 ];
 
 const mobilePlans = [
@@ -48,51 +48,31 @@ export default function OffersQrPage() {
           <div className="h-full w-full bg-[linear-gradient(120deg,transparent_0_46%,#F47B20_46%_48%,transparent_48%_100%),linear-gradient(60deg,transparent_0_46%,#1F252B_46%_48%,transparent_48%_100%)] bg-[length:180px_180px]" />
         </div>
 
-        <div className="relative mx-auto grid max-w-6xl gap-10 px-5 py-8 md:py-12 lg:grid-cols-[1fr_0.9fr] lg:items-center">
-          <div>
-            <div className="mb-8 inline-flex items-center rounded-lg border border-nimbus-line bg-white px-4 py-3 shadow-sm">
+        <div className="relative mx-auto max-w-6xl px-5 py-8 md:py-12">
+          <div className="mx-auto max-w-4xl text-center">
+            <div className="mb-7 flex justify-center">
               <Image
                 src={NIMBUS_LOGO_URL}
                 alt="Nimbus Telecom"
                 width={223}
                 height={70}
                 unoptimized
-                className="h-auto w-[150px] object-contain"
+                className="h-auto w-[190px] object-contain sm:w-[220px]"
               />
             </div>
 
-            <p className="inline-flex rounded-full border border-orange-200 bg-orange-50 px-4 py-2 text-sm font-black uppercase tracking-[0.16em] text-nimbus-orange">
-              Promoció QR
-            </p>
-            <h1 className="mt-5 max-w-4xl text-4xl font-black tracking-tight text-nimbus-ink md:text-6xl">
-              Ofertas reals en fibra, mòbil i internet
+            <h1 className="text-4xl font-black tracking-tight text-nimbus-ink md:text-6xl">
+              Ofertes reals en fibra, mòbil i internet
             </h1>
-            <div className="mt-6 grid gap-2 text-xl font-black text-nimbus-ink sm:max-w-sm">
-              <p>Sense sorpreses.</p>
-              <p>Sense complicacions.</p>
-              <p>Sense call centers.</p>
+            <div className="mt-6 flex flex-wrap justify-center gap-3 text-sm font-black uppercase tracking-[0.12em] text-nimbus-ink">
+              <span className="rounded-full bg-nimbus-soft px-4 py-2">Sense sorpreses</span>
+              <span className="rounded-full bg-nimbus-soft px-4 py-2">Sense complicacions</span>
+              <span className="rounded-full bg-nimbus-soft px-4 py-2">Atenció propera</span>
             </div>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <a
-                href={CONTACT_INFO.whatsappHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-nimbus-orange px-6 py-3 text-sm font-black text-white shadow-sm transition hover:bg-nimbus-orangeDark"
-              >
-                <VisualIcon name="message-circle" className="size-5" />
-                Escriu-nos per WhatsApp
-              </a>
-              <a
-                href="tel:+34622812604"
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-nimbus-line bg-white px-6 py-3 text-sm font-black text-nimbus-ink shadow-sm transition hover:border-nimbus-orange hover:text-nimbus-orange"
-              >
-                <VisualIcon name="phone-call" className="size-5" />
-                +34 622 81 26 04
-              </a>
-            </div>
+            <ContactButtons className="mt-8 justify-center" />
           </div>
 
-          <div className="grid gap-4 rounded-lg border border-nimbus-line bg-nimbus-soft p-5 shadow-soft">
+          <div className="mt-10 grid gap-4 rounded-lg border border-nimbus-line bg-nimbus-soft p-5 shadow-soft lg:grid-cols-[0.9fr_1.1fr]">
             <PromoCard
               eyebrow="Internet rural"
               title="Connexió per zones on la fibra no arriba"
@@ -109,9 +89,7 @@ export default function OffersQrPage() {
                   <PricePill key={plan.data} label={plan.data} price={plan.price} />
                 ))}
               </div>
-              <p className="mt-4 text-sm font-bold text-nimbus-muted">
-                10% de descompte a totes les línies mòbils en contractar fibra.
-              </p>
+              <DiscountCallout compact />
             </div>
           </div>
         </div>
@@ -126,7 +104,7 @@ export default function OffersQrPage() {
               </span>
               <div>
                 <p className="text-sm font-black uppercase tracking-[0.16em] text-nimbus-orange">Fibra òptica</p>
-                <h2 className="mt-2 text-3xl font-black tracking-tight text-nimbus-ink">Fibra para casa o negocio</h2>
+                <h2 className="mt-2 text-3xl font-black tracking-tight text-nimbus-ink">Fibra per a casa o negoci</h2>
               </div>
             </div>
             <div className="mt-7 grid gap-3">
@@ -134,13 +112,7 @@ export default function OffersQrPage() {
                 <PricePill key={plan.speed} label={plan.speed} price={plan.price} />
               ))}
             </div>
-            <div className="mt-6 rounded-lg bg-orange-50 p-5">
-              <p className="text-4xl font-black text-nimbus-orange">10%</p>
-              <p className="mt-1 font-black text-nimbus-ink">Descompte</p>
-              <p className="mt-2 text-sm leading-6 text-nimbus-muted">
-                A totes les línies mòbils en contractar fibra.
-              </p>
-            </div>
+            <DiscountCallout />
           </article>
 
           <article className="rounded-lg border border-nimbus-line bg-nimbus-ink p-6 text-white shadow-soft md:p-8">
@@ -171,15 +143,15 @@ export default function OffersQrPage() {
 
       <section className="bg-nimbus-soft py-14 md:py-20">
         <div className="mx-auto grid max-w-6xl gap-6 px-5 lg:grid-cols-2">
-          <article className="rounded-lg border border-white bg-white p-6 shadow-soft md:p-8">
-            <p className="text-sm font-black uppercase tracking-[0.16em] text-nimbus-orange">
+          <article className="rounded-lg border border-white bg-white p-6 text-center shadow-soft md:p-8">
+            <p className="inline-flex rounded-full bg-orange-50 px-5 py-2 text-sm font-black uppercase tracking-[0.16em] text-nimbus-orange">
               Sense quotes mensuals
             </p>
-            <h2 className="mt-3 text-4xl font-black tracking-tight text-nimbus-ink">Alarma Ajax</h2>
+            <h2 className="mt-5 text-4xl font-black tracking-tight text-nimbus-ink">Alarma Ajax</h2>
             <p className="mt-3 text-2xl font-black text-nimbus-orange">Protegeix casa teva</p>
             <ul className="mt-6 grid gap-3">
               {ajaxFeatures.map((feature) => (
-                <li key={feature} className="flex items-center gap-3 font-bold text-nimbus-ink">
+                <li key={feature} className="flex items-center justify-center gap-3 font-bold text-nimbus-ink">
                   <span className="grid size-9 shrink-0 place-items-center rounded-full bg-orange-100 text-nimbus-orange">
                     <VisualIcon name="shield-check" className="size-4" />
                   </span>
@@ -187,24 +159,28 @@ export default function OffersQrPage() {
                 </li>
               ))}
             </ul>
-            <div className="mt-7 inline-flex rounded-full bg-nimbus-orange px-8 py-4 text-4xl font-black text-white">
-              499€
+            <div className="mt-7 flex justify-center">
+              <div className="inline-flex rounded-full bg-nimbus-orange px-10 py-4 text-4xl font-black text-white">
+                499€
+              </div>
             </div>
           </article>
 
-          <article className="rounded-lg border border-nimbus-line bg-white p-6 shadow-soft md:p-8">
+          <article className="rounded-lg border border-nimbus-line bg-white p-6 text-center shadow-soft md:p-8">
             <p className="text-sm font-black uppercase tracking-[0.16em] text-nimbus-orange">
               Servei Express TV
             </p>
             <h2 className="mt-3 text-3xl font-black tracking-tight text-nimbus-ink">
               Deixa la teva senyal funcionant en una sola visita
             </h2>
-            <div className="mt-7 inline-flex rounded-full bg-nimbus-orange px-8 py-4 text-4xl font-black text-white">
-              75€
+            <div className="mt-7 flex justify-center">
+              <div className="inline-flex rounded-full bg-nimbus-orange px-10 py-4 text-4xl font-black text-white">
+                75€
+              </div>
             </div>
             <div className="mt-8 grid gap-3 sm:grid-cols-3">
               {["Sense sorpreses", "Sense complicacions", "Atenció propera"].map((item) => (
-                <div key={item} className="rounded-lg bg-nimbus-soft p-4 text-sm font-black text-nimbus-ink">
+                <div key={item} className="rounded-lg bg-nimbus-soft p-4 text-center text-base font-black text-nimbus-ink">
                   {item}
                 </div>
               ))}
@@ -218,27 +194,10 @@ export default function OffersQrPage() {
           <div>
             <p className="text-sm font-black uppercase tracking-[0.16em] text-nimbus-orange">Nimbus Telecom</p>
             <h2 className="mt-2 text-3xl font-black tracking-tight text-nimbus-ink">
-              T&apos;ajudem a escollir l&apos;opció que encaixa amb casa teva.
+              T&apos;ajudem a escollir la millor opció per a casa teva.
             </h2>
           </div>
-          <div className="grid gap-3 sm:grid-cols-2 md:w-[420px]">
-            <a
-              href={CONTACT_INFO.whatsappHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-nimbus-orange px-5 py-3 text-sm font-black text-white transition hover:bg-nimbus-orangeDark"
-            >
-              <VisualIcon name="message-circle" className="size-5" />
-              WhatsApp
-            </a>
-            <a
-              href="tel:+34622812604"
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-nimbus-line bg-white px-5 py-3 text-sm font-black text-nimbus-ink transition hover:border-nimbus-orange hover:text-nimbus-orange"
-            >
-              <VisualIcon name="phone-call" className="size-5" />
-              Trucar
-            </a>
-          </div>
+          <ContactButtons className="md:w-[420px]" />
         </div>
         <div className="mx-auto mt-8 flex max-w-6xl flex-wrap items-center justify-between gap-3 border-t border-nimbus-line px-5 pt-6 text-sm font-bold text-nimbus-muted">
           <span>www.nimbustelecom.com</span>
@@ -271,7 +230,7 @@ function PromoCard({ eyebrow, title, icon, plans }: PromoCardProps) {
       </div>
       <div className="mt-5 grid gap-3">
         {plans.map((plan) => (
-          <div key={plan} className="rounded-full bg-yellow-300 px-5 py-3 text-lg font-black text-nimbus-ink">
+          <div key={plan} className="rounded-full bg-yellow-300 px-5 py-3 text-center text-lg font-black text-nimbus-ink">
             {plan}
           </div>
         ))}
@@ -282,8 +241,64 @@ function PromoCard({ eyebrow, title, icon, plans }: PromoCardProps) {
 
 function PricePill({ label, price }: { label: string; price: string }) {
   return (
-    <div className="rounded-full bg-yellow-300 px-5 py-3 text-lg font-black text-nimbus-ink">
-      {label} - {price}/mes
+    <div className="rounded-full bg-yellow-300 px-5 py-3 text-center text-lg font-black text-nimbus-ink">
+      <span>{label}</span>
+      <span aria-hidden="true"> - </span>
+      <span>{price}/mes</span>
     </div>
+  );
+}
+
+function DiscountCallout({ compact = false }: { compact?: boolean }) {
+  return (
+    <div className={`mt-6 rounded-lg bg-orange-50 p-5 text-center ${compact ? "" : "md:p-6"}`}>
+      <p className={`${compact ? "text-3xl" : "text-4xl"} font-black text-nimbus-orange`}>
+        10% de descompte
+      </p>
+      <p className="mt-2 text-base font-black leading-7 text-nimbus-ink md:text-lg">
+        A totes les línies mòbils en contractar la fibra.
+      </p>
+    </div>
+  );
+}
+
+function ContactButtons({ className = "" }: { className?: string }) {
+  return (
+    <div className={`grid gap-3 sm:grid-cols-2 ${className}`}>
+      <a
+        href={CONTACT_INFO.whatsappHref}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center justify-center gap-2 rounded-full bg-nimbus-orange px-5 py-3 text-sm font-black text-white shadow-sm transition hover:bg-nimbus-orangeDark"
+      >
+        <WhatsAppIcon />
+        WhatsApp
+      </a>
+      <a
+        href="tel:+34622812604"
+        className="inline-flex items-center justify-center gap-2 rounded-full border border-nimbus-line bg-white px-5 py-3 text-sm font-black text-nimbus-ink shadow-sm transition hover:border-nimbus-orange hover:text-nimbus-orange"
+      >
+        <VisualIcon name="phone-call" className="size-5" />
+        Trucar
+      </a>
+    </div>
+  );
+}
+
+function WhatsAppIcon() {
+  return (
+    <svg
+      className="size-5"
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+    >
+      <path d="M3.5 20.5 5 16.2A8.5 8.5 0 1 1 8 19.1Z" />
+      <path d="M9.2 8.9c.2-.4.4-.5.7-.5h.5c.2 0 .4.1.5.4l.6 1.4c.1.3 0 .5-.2.7l-.4.4c.5 1 1.3 1.8 2.4 2.4l.5-.5c.2-.2.5-.3.8-.2l1.4.7c.3.1.4.3.4.6v.4c0 .4-.2.7-.6.8-.6.2-1.2.2-1.8 0-2.5-.8-4.5-2.8-5.3-5.3-.2-.6-.2-1.2 0-1.8Z" />
+    </svg>
   );
 }
