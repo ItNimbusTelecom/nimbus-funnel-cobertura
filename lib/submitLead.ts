@@ -1,6 +1,48 @@
 "use client";
 
+type LegacyLeadPayload = {
+  leadType?: unknown;
+  selectedPlan?: {
+    id?: unknown;
+    name?: unknown;
+    price?: unknown;
+    data?: unknown;
+    description?: unknown;
+  };
+  source?: {
+    path?: unknown;
+    search?: unknown;
+    referrer?: unknown;
+    utm_source?: unknown;
+    utm_medium?: unknown;
+    utm_campaign?: unknown;
+    utm_content?: unknown;
+    utm_term?: unknown;
+  };
+  answers?: {
+    coverageProblem?: unknown;
+    problemLocationType?: unknown;
+    problemLocationText?: unknown;
+    mobileUsage?: unknown;
+    currentOperator?: unknown;
+    additionalComment?: unknown;
+  };
+  contact?: {
+    name?: unknown;
+    phone?: unknown;
+    email?: unknown;
+    preferredContact?: unknown;
+    consent?: unknown;
+  };
+};
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
 export async function submitLead(payload: unknown) {
+  if (API_BASE_URL) {
+    return submitToServerlessApi(payload);
+  }
+
   if (process.env.NEXT_PUBLIC_STATIC_EXPORT === "true") {
     console.log("[static export mock lead]", payload);
     return { ok: true, mock: true };
@@ -18,4 +60,125 @@ export async function submitLead(payload: unknown) {
   }
 
   return data;
+}
+
+async function submitToServerlessApi(payload: unknown) {
+  const legacyPayload = payload as LegacyLeadPayload;
+  const endpoint = legacyPayload.leadType === "estudio-cobertura" ? "/coverage-study" : "/leads";
+  const apiPayload =
+    legacyPayload.leadType === "estudio-cobertura"
+      ? toCoverageStudyPayload(legacyPayload)
+      : toLeadPayload(legacyPayload);
+
+  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(apiPayload),
+  });
+  const data = await response.json();
+
+  if (!response.ok || !data.ok) {
+    throw new Error(data.error?.message || "No hemos podido enviar la solicitud.");
+  }
+
+  return data;
+}
+
+function toLeadPayload(payload: LegacyLeadPayload) {
+  const contact = payload.contact ?? {};
+  const selectedPlan = payload.selectedPlan;
+  const preferredContact = toPreferredContactMethod(contact.preferredContact);
+  const planSummary = selectedPlan
+    ? [
+        `Plan solicitado: ${toText(selectedPlan.name)}`,
+        `Precio: ${toText(selectedPlan.price)}`,
+        `Datos: ${toText(selectedPlan.data)}`,
+        `Descripción: ${toText(selectedPlan.description)}`,
+      ].join("\n")
+    : undefined;
+
+  return {
+    name: toText(contact.name) || "Solicitud desde funnel Nimbus",
+    phone: toText(contact.phone),
+    email: toText(contact.email),
+    preferredContactMethod: preferredContact,
+    message: planSummary,
+    source: getSourceLabel(payload),
+    language: getCurrentLocale(),
+    pageUrl: getPageUrl(payload),
+    consentAccepted: contact.consent === true,
+  };
+}
+
+function toCoverageStudyPayload(payload: LegacyLeadPayload) {
+  const contact = payload.contact ?? {};
+  const answers = payload.answers ?? {};
+  const locationText = toText(answers.problemLocationText);
+  const locationFallback = toText(answers.problemLocationType) || "Zona no indicada";
+  const usage = Array.isArray(answers.mobileUsage) ? answers.mobileUsage.map(toText).filter(Boolean).join(", ") : "";
+  const currentProblem = [
+    `Problema: ${toText(answers.coverageProblem)}`,
+    `Dónde pasa: ${toText(answers.problemLocationType)}`,
+    locationText ? `Zona indicada: ${locationText}` : "",
+    usage ? `Uso móvil: ${usage}` : "",
+    toText(answers.additionalComment) ? `Comentario: ${toText(answers.additionalComment)}` : "",
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  return {
+    name: toText(contact.name),
+    phone: toText(contact.phone),
+    email: toText(contact.email),
+    address: locationText || locationFallback,
+    postalCode: "",
+    city: "",
+    province: "",
+    preferredContactMethod: toPreferredContactMethod(contact.preferredContact),
+    currentProblem,
+    currentOperator: toText(answers.currentOperator),
+    serviceType: "mobile",
+    language: getCurrentLocale(),
+    pageUrl: getPageUrl(payload),
+    consentAccepted: contact.consent === true,
+  };
+}
+
+function toPreferredContactMethod(value: unknown) {
+  if (value === "whatsapp" || value === "email") {
+    return value;
+  }
+
+  return "phone";
+}
+
+function getCurrentLocale() {
+  const locale = window.localStorage.getItem("nimbus-locale");
+  return locale === "ca" || locale === "en" ? locale : "es";
+}
+
+function getPageUrl(payload: LegacyLeadPayload) {
+  const path = toText(payload.source?.path) || window.location.pathname;
+  const search = toText(payload.source?.search) || window.location.search;
+  return `${window.location.origin}${path}${search}`;
+}
+
+function getSourceLabel(payload: LegacyLeadPayload) {
+  const source = payload.source;
+  if (!source) return "landing";
+
+  return [
+    toText(source.utm_source) ? `utm_source=${toText(source.utm_source)}` : "",
+    toText(source.utm_medium) ? `utm_medium=${toText(source.utm_medium)}` : "",
+    toText(source.utm_campaign) ? `utm_campaign=${toText(source.utm_campaign)}` : "",
+    toText(source.utm_content) ? `utm_content=${toText(source.utm_content)}` : "",
+    toText(source.utm_term) ? `utm_term=${toText(source.utm_term)}` : "",
+    toText(source.referrer) ? `referrer=${toText(source.referrer)}` : "",
+  ]
+    .filter(Boolean)
+    .join("; ");
+}
+
+function toText(value: unknown) {
+  return typeof value === "string" ? value.trim() : "";
 }

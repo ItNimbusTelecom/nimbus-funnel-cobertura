@@ -1,6 +1,10 @@
 node_modules/
 .next/
 out/
+dist/
+cdk.out/
+coverage/
+.codex/
 
 .env
 .env*.local

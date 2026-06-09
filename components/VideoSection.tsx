@@ -4,12 +4,16 @@ import { useState } from "react";
 import { trackEvent } from "@/lib/analytics";
 import { useI18n } from "@/lib/i18n";
 
-const VIDEO_URL = "";
+const VIDEO_URL = "https://youtube.com/shorts/yDZc9NbFWvk?feature=share";
 
 export function VideoSection() {
   const { dictionary } = useI18n();
   const [placeholderMessage, setPlaceholderMessage] = useState("");
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const videoType = getVideoType(VIDEO_URL);
+  const isVerticalVideo = isYoutubeShort(VIDEO_URL);
+  const youtubeVideoId = getYoutubeVideoId(VIDEO_URL);
+  const thumbnailUrl = youtubeVideoId ? `https://i.ytimg.com/vi/${youtubeVideoId}/hqdefault.jpg` : "";
 
   function handlePlaceholderClick() {
     trackEvent("video_play_clicked", { status: "placeholder" });
@@ -18,6 +22,7 @@ export function VideoSection() {
 
   function handleAvailableClick() {
     trackEvent("video_play_clicked", { status: "available" });
+    setIsVideoPlaying(true);
   }
 
   return (
@@ -51,7 +56,7 @@ export function VideoSection() {
         </div>
 
         <div>
-          <div className="overflow-hidden rounded-lg border border-nimbus-line bg-white shadow-soft">
+          <div className="overflow-hidden">
             {videoType === "empty" ? (
               <button
                 type="button"
@@ -68,14 +73,43 @@ export function VideoSection() {
             ) : null}
 
             {videoType === "iframe" ? (
-              <iframe
-                src={toEmbedUrl(VIDEO_URL)}
-                title={dictionary.video.aria}
-                className="aspect-video w-full"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                onLoad={handleAvailableClick}
-              />
+              <div>
+                {isVideoPlaying ? (
+                  <iframe
+                    src={toEmbedUrl(VIDEO_URL, true)}
+                    title={dictionary.video.aria}
+                    className={
+                      isVerticalVideo
+                        ? "mx-auto aspect-[9/16] max-h-[680px] w-full max-w-sm rounded-md bg-black"
+                        : "aspect-video w-full"
+                    }
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                    referrerPolicy="strict-origin-when-cross-origin"
+                  />
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleAvailableClick}
+                    aria-label={dictionary.video.aria}
+                    className={
+                      isVerticalVideo
+                        ? "group relative mx-auto grid aspect-[9/16] max-h-[680px] w-full max-w-sm place-items-center overflow-hidden rounded-md bg-cover bg-center text-center"
+                        : "group relative grid aspect-video w-full place-items-center overflow-hidden bg-cover bg-center text-center"
+                    }
+                    style={{
+                      backgroundImage: `linear-gradient(rgba(17, 24, 39, 0.18), rgba(17, 24, 39, 0.56)), url(${thumbnailUrl})`,
+                    }}
+                  >
+                    <span className="grid size-20 place-items-center rounded-full bg-nimbus-orange text-white shadow-soft transition group-hover:bg-nimbus-orangeDark">
+                      <span className="ml-1 h-0 w-0 border-y-[13px] border-l-[20px] border-y-transparent border-l-white" />
+                    </span>
+                    <span className="absolute inset-x-4 bottom-4 rounded-full bg-white/92 px-4 py-2 text-sm font-black text-nimbus-ink shadow-sm">
+                      {dictionary.video.play}
+                    </span>
+                  </button>
+                )}
+              </div>
             ) : null}
 
             {videoType === "mp4" ? (
@@ -93,10 +127,6 @@ export function VideoSection() {
           {placeholderMessage ? (
             <p className="mt-3 rounded-lg bg-white p-3 text-sm font-bold text-nimbus-muted">{placeholderMessage}</p>
           ) : null}
-
-          <p className="mt-4 text-sm leading-6 text-nimbus-muted">
-            {dictionary.video.below}
-          </p>
         </div>
       </div>
     </section>
@@ -119,15 +149,19 @@ function getVideoType(url: string) {
   return "empty";
 }
 
-function toEmbedUrl(url: string) {
-  if (url.includes("youtu.be/")) {
-    const videoId = url.split("youtu.be/")[1]?.split(/[?&]/)[0];
-    return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
-  }
+function toEmbedUrl(url: string, autoplay = false) {
+  const youtubeVideoId = getYoutubeVideoId(url);
+  if (youtubeVideoId) {
+    const params = new URLSearchParams({
+      rel: "0",
+      playsinline: "1",
+    });
 
-  if (url.includes("youtube.com/watch")) {
-    const videoId = new URL(url).searchParams.get("v");
-    return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
+    if (autoplay) {
+      params.set("autoplay", "1");
+    }
+
+    return `https://www.youtube.com/embed/${youtubeVideoId}?${params.toString()}`;
   }
 
   if (url.includes("vimeo.com/")) {
@@ -136,4 +170,24 @@ function toEmbedUrl(url: string) {
   }
 
   return url;
+}
+
+function isYoutubeShort(url: string) {
+  return url.includes("youtube.com/shorts/");
+}
+
+function getYoutubeVideoId(url: string) {
+  if (url.includes("youtu.be/")) {
+    return url.split("youtu.be/")[1]?.split(/[?&]/)[0] || "";
+  }
+
+  if (url.includes("youtube.com/shorts/")) {
+    return url.split("youtube.com/shorts/")[1]?.split(/[?&]/)[0] || "";
+  }
+
+  if (url.includes("youtube.com/watch")) {
+    return new URL(url).searchParams.get("v") || "";
+  }
+
+  return "";
 }

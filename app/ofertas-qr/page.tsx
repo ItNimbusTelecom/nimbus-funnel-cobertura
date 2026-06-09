@@ -131,7 +131,7 @@ export default function OffersQrPage() {
               </div>
               <div className="grid gap-3">
                 {sharedDataPlans.map((plan) => (
-                  <div key={plan.data} className="rounded-lg bg-white p-4 text-nimbus-ink">
+                  <div key={plan.data} className="rounded-lg bg-white p-4 text-center text-nimbus-ink">
                     <p className="text-xl font-black">
                       {plan.data} - {plan.price}/mes
                     </p>
