@@ -4,6 +4,8 @@ import { VisualIcon } from "@/components/VisualIcon";
 import { CONTACT_INFO } from "@/lib/contact";
 import { NIMBUS_LOGO_URL } from "@/lib/brand";
 
+const LINKTREE_URL = "https://linktr.ee/nimbustelecom";
+
 export const metadata: Metadata = {
   title: "Ofertes reals en fibra, mòbil i internet | Nimbus Telecom",
   description:
@@ -199,10 +201,16 @@ export default function OffersQrPage() {
           </div>
           <ContactButtons className="md:w-[420px]" />
         </div>
-        <div className="mx-auto mt-8 flex max-w-6xl flex-wrap items-center justify-between gap-3 border-t border-nimbus-line px-5 pt-6 text-sm font-bold text-nimbus-muted">
-          <span>www.nimbustelecom.com</span>
-          <span>+34 622 81 26 04</span>
-          <span>@nimbustelecom</span>
+        <div className="mx-auto mt-8 flex max-w-6xl justify-center border-t border-nimbus-line px-5 pt-6">
+          <a
+            href={LINKTREE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2 rounded-full border border-nimbus-line bg-white px-5 py-3 text-sm font-black text-nimbus-ink shadow-sm transition hover:border-nimbus-orange hover:text-nimbus-orange"
+          >
+            <VisualIcon name="globe" className="size-5" />
+            Tots els enllaços Nimbus
+          </a>
         </div>
       </section>
     </main>
@@ -269,7 +277,7 @@ function ContactButtons({ className = "" }: { className?: string }) {
         href={CONTACT_INFO.whatsappHref}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center justify-center gap-2 rounded-full bg-nimbus-orange px-5 py-3 text-sm font-black text-white shadow-sm transition hover:bg-nimbus-orangeDark"
+        className="inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3 text-sm font-black text-white shadow-sm transition hover:bg-[#1FAF55]"
       >
         <WhatsAppIcon />
         WhatsApp
