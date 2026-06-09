@@ -66,7 +66,7 @@ export class NimbusFunnelBackendStack extends cdk.Stack {
         removalPolicy: props.stage === "prod" ? cdk.RemovalPolicy.RETAIN : cdk.RemovalPolicy.DESTROY
       }),
       bundling: {
-        format: nodejs.OutputFormat.ESM,
+        format: nodejs.OutputFormat.CJS,
         mainFields: ["module", "main"],
         sourceMap: true
       },
