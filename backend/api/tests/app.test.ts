@@ -127,11 +127,11 @@ describe("Nimbus funnel API", () => {
     expect(response.body.error.code).toBe("VALIDATION_ERROR");
   });
 
-  it("accepts a coverage study with address", async () => {
+  it("accepts a coverage study with problem location text", async () => {
     const response = await invoke(createTestApp(), "POST", "/coverage-study", {
       name: "Patricia",
       phone: "972850155",
-      address: "C/Major, 42",
+      problemLocationText: "Sils, dentro de casa",
       preferredContactMethod: "whatsapp",
       currentProblem: "No tengo cobertura en casa",
       serviceType: "mobile",
@@ -143,11 +143,11 @@ describe("Nimbus funnel API", () => {
     expect(response.body.ok).toBe(true);
   });
 
-  it("accepts a coverage study with postal code", async () => {
+  it("accepts a coverage study with problem location type", async () => {
     const response = await invoke(createTestApp(), "POST", "/coverage-study", {
       name: "Patricia",
       email: "info@nimbustelecom.es",
-      postalCode: "17410",
+      problemLocationType: "En interiores, dentro de casa o del trabajo",
       preferredContactMethod: "email",
       currentProblem: "Los datos van lentos",
       serviceType: "mobile",
@@ -162,7 +162,7 @@ describe("Nimbus funnel API", () => {
   it("rejects a coverage study without phone or email", async () => {
     const response = await invoke(createTestApp(), "POST", "/coverage-study", {
       name: "Patricia",
-      postalCode: "17410",
+      problemLocationText: "Sils",
       preferredContactMethod: "email",
       currentProblem: "Los datos van lentos",
       serviceType: "mobile",
@@ -174,7 +174,7 @@ describe("Nimbus funnel API", () => {
     expect(response.body.error.code).toBe("VALIDATION_ERROR");
   });
 
-  it("rejects a coverage study without address or postal code", async () => {
+  it("rejects a coverage study without problem location", async () => {
     const response = await invoke(createTestApp(), "POST", "/coverage-study", {
       name: "Patricia",
       phone: "972850155",
@@ -193,7 +193,7 @@ describe("Nimbus funnel API", () => {
     const response = await invoke(createTestApp(), "POST", "/coverage-study", {
       name: "Patricia",
       phone: "972850155",
-      postalCode: "17410",
+      problemLocationText: "Sils",
       preferredContactMethod: "phone",
       currentProblem: "Los datos van lentos",
       serviceType: "mobile",

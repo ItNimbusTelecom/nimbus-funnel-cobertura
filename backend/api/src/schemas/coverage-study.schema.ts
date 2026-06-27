@@ -14,10 +14,8 @@ export const CoverageStudySchema = z
     name: z.string().trim().min(1, "Name is required"),
     phone: OptionalTrimmedString,
     email: OptionalTrimmedString,
-    address: OptionalTrimmedString,
-    postalCode: OptionalTrimmedString,
-    city: OptionalTrimmedString,
-    province: OptionalTrimmedString,
+    problemLocationText: OptionalTrimmedString,
+    problemLocationType: OptionalTrimmedString,
     preferredContactMethod: PreferredContactMethodSchema,
     currentProblem: z.string().trim().min(1, "Current problem is required"),
     currentOperator: OptionalTrimmedString,
@@ -34,9 +32,9 @@ export const CoverageStudySchema = z
     message: "Phone or email is required",
     path: ["phone"]
   })
-  .refine((value) => Boolean(value.address || value.postalCode), {
-    message: "Address or postal code is required",
-    path: ["address"]
+  .refine((value) => Boolean(value.problemLocationText || value.problemLocationType), {
+    message: "Problem location is required",
+    path: ["problemLocationText"]
   });
 
 export type CoverageStudyInput = z.infer<typeof CoverageStudySchema>;

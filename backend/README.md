@@ -57,10 +57,8 @@ Campos:
 - `name`
 - `phone`
 - `email`
-- `address`
-- `postalCode`
-- `city`
-- `province`
+- `problemLocationText`
+- `problemLocationType`
 - `preferredContactMethod`: `phone`, `whatsapp`, `email`
 - `currentProblem`
 - `currentOperator`
@@ -73,7 +71,7 @@ Campos:
 Reglas:
 
 - `phone` o `email` deben estar presentes.
-- `address` o `postalCode` deben estar presentes.
+- `problemLocationText` o `problemLocationType` deben estar presentes.
 - `consentAccepted` debe ser `true`.
 
 ### `POST /contact-intent`
