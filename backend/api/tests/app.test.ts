@@ -89,7 +89,7 @@ describe("Nimbus funnel API", () => {
     expect(response.body.data.status).toBe("new");
   });
 
-  it("accepts a valid lead with email", async () => {
+  it("rejects a lead without phone", async () => {
     const response = await invoke(createTestApp(), "POST", "/leads", {
       name: "Patricia",
       email: "info@nimbustelecom.es",
@@ -98,13 +98,14 @@ describe("Nimbus funnel API", () => {
       consentAccepted: true
     });
 
-    expect(response.status).toBe(201);
-    expect(response.body.ok).toBe(true);
+    expect(response.status).toBe(400);
+    expect(response.body.error.code).toBe("VALIDATION_ERROR");
   });
 
-  it("rejects a lead without phone or email", async () => {
+  it("rejects a lead with phone prefix", async () => {
     const response = await invoke(createTestApp(), "POST", "/leads", {
       name: "Patricia",
+      phone: "+34972850155",
       preferredContactMethod: "phone",
       language: "es",
       consentAccepted: true
@@ -131,6 +132,7 @@ describe("Nimbus funnel API", () => {
     const response = await invoke(createTestApp(), "POST", "/coverage-study", {
       name: "Patricia",
       phone: "972850155",
+      email: "info@nimbustelecom.es",
       problemLocationText: "Sils, dentro de casa",
       preferredContactMethod: "whatsapp",
       currentProblem: "No tengo cobertura en casa",
@@ -159,11 +161,28 @@ describe("Nimbus funnel API", () => {
     expect(response.body.ok).toBe(true);
   });
 
-  it("rejects a coverage study without phone or email", async () => {
+  it("accepts a coverage study for office contact with email and no phone", async () => {
     const response = await invoke(createTestApp(), "POST", "/coverage-study", {
       name: "Patricia",
+      email: "info@nimbustelecom.es",
       problemLocationText: "Sils",
-      preferredContactMethod: "email",
+      preferredContactMethod: "office",
+      currentProblem: "Los datos van lentos",
+      serviceType: "mobile",
+      language: "es",
+      consentAccepted: true
+    });
+
+    expect(response.status).toBe(201);
+    expect(response.body.ok).toBe(true);
+  });
+
+  it("rejects a coverage study without email", async () => {
+    const response = await invoke(createTestApp(), "POST", "/coverage-study", {
+      name: "Patricia",
+      phone: "972850155",
+      problemLocationText: "Sils",
+      preferredContactMethod: "phone",
       currentProblem: "Los datos van lentos",
       serviceType: "mobile",
       language: "es",
@@ -178,6 +197,7 @@ describe("Nimbus funnel API", () => {
     const response = await invoke(createTestApp(), "POST", "/coverage-study", {
       name: "Patricia",
       phone: "972850155",
+      email: "info@nimbustelecom.es",
       preferredContactMethod: "phone",
       currentProblem: "Los datos van lentos",
       serviceType: "mobile",
@@ -193,6 +213,7 @@ describe("Nimbus funnel API", () => {
     const response = await invoke(createTestApp(), "POST", "/coverage-study", {
       name: "Patricia",
       phone: "972850155",
+      email: "info@nimbustelecom.es",
       problemLocationText: "Sils",
       preferredContactMethod: "phone",
       currentProblem: "Los datos van lentos",

@@ -4,14 +4,15 @@ import { useState } from "react";
 import { trackEvent } from "@/lib/analytics";
 import { useI18n } from "@/lib/i18n";
 
-const VIDEO_URL = "https://youtube.com/shorts/yDZc9NbFWvk?feature=share";
+const VIDEO_URL = "https://youtu.be/pSWT-rQv4Ws";
+const IS_VERTICAL_VIDEO = true;
 
 export function VideoSection() {
   const { dictionary } = useI18n();
   const [placeholderMessage, setPlaceholderMessage] = useState("");
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const videoType = getVideoType(VIDEO_URL);
-  const isVerticalVideo = isYoutubeShort(VIDEO_URL);
+  const isVerticalVideo = IS_VERTICAL_VIDEO || isYoutubeShort(VIDEO_URL);
   const youtubeVideoId = getYoutubeVideoId(VIDEO_URL);
   const thumbnailUrl = youtubeVideoId ? `https://i.ytimg.com/vi/${youtubeVideoId}/hqdefault.jpg` : "";
 

@@ -55,7 +55,7 @@ export function LegalConsentCheckbox({
           >
             {dictionary.legal.notice}
           </a>
-          .
+          .<span className="ml-1 text-red-600" aria-hidden="true">*</span>
         </label>
       </div>
       {error ? (

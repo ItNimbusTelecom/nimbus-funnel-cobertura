@@ -1,8 +1,9 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useState } from "react";
 import { trackEvent } from "@/lib/analytics";
 import { getElapsedSeconds } from "@/lib/antispam";
+import { isValidPersonName, isValidSpanishPhone } from "@/lib/formValidation";
 import { useI18n } from "@/lib/i18n";
 import { type MobilePlan } from "@/lib/plans";
 import { submitLead as submitLeadRequest } from "@/lib/submitLead";
@@ -23,12 +24,17 @@ const contactChoices: Array<{ id: ContactChoice; icon: "phone" | "message-circle
   { id: "office", icon: "map-pin" },
 ];
 
+const WHATSAPP_URL =
+  "https://wa.me/34622812604?text=Hola%20Nimbus%2C%20quiero%20informaci%C3%B3n%20para%20contratar%20una%20l%C3%ADnea%20m%C3%B3vil.";
+const GOOGLE_MAPS_URL = "https://maps.app.goo.gl/5LVXuQYrybacb82U8";
+const GOOGLE_MAPS_EMBED_URL =
+  "https://www.google.com/maps?q=Nimbus%20Telecom%2C%20C%2F%20Major%2042%2C%20Sils&output=embed";
+
 export function DirectContractModal({ plan, onClose }: DirectContractModalProps) {
   const { dictionary } = useI18n();
   const [choice, setChoice] = useState<ContactChoice>("phone");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
   const [consent, setConsent] = useState(false);
   const [company, setCompany] = useState("");
   const [formStartedAt] = useState(() => new Date().toISOString());
@@ -36,13 +42,13 @@ export function DirectContractModal({ plan, onClose }: DirectContractModalProps)
   const [sent, setSent] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const requiresContact = choice !== "office";
-  const preferredContact = useMemo(() => (choice === "office" ? "oficina" : choice), [choice]);
+  const preferredContact = choice;
   const consentError = error === dictionary.modal.errors.consent ? error : undefined;
 
   function selectChoice(nextChoice: ContactChoice) {
     setChoice(nextChoice);
     setError("");
+    setSent(false);
     if (nextChoice === "office") {
       trackEvent("contratacion_oficina_selected", { plan_id: plan.id });
     }
@@ -50,23 +56,19 @@ export function DirectContractModal({ plan, onClose }: DirectContractModalProps)
 
   function openWhatsapp() {
     trackEvent("contratacion_whatsapp_clicked", { plan_id: plan.id });
-    window.open(
-      "https://wa.me/34622812604?text=Hola%20Nimbus%2C%20quiero%20informaci%C3%B3n%20para%20contratar%20una%20l%C3%ADnea%20m%C3%B3vil.",
-      "_blank",
-      "noopener,noreferrer",
-    );
+    window.open(WHATSAPP_URL, "_blank", "noopener,noreferrer");
   }
 
   async function submitLead(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
 
-    if (requiresContact && !name.trim()) {
+    if (!isValidPersonName(name)) {
       setError(dictionary.modal.errors.name);
       return;
     }
 
-    if (requiresContact && !phone.trim()) {
+    if (!isValidSpanishPhone(phone)) {
       setError(dictionary.modal.errors.phone);
       return;
     }
@@ -101,7 +103,6 @@ export function DirectContractModal({ plan, onClose }: DirectContractModalProps)
       contact: {
         name,
         phone,
-        email,
         preferredContact,
         consent,
       },
@@ -154,7 +155,7 @@ export function DirectContractModal({ plan, onClose }: DirectContractModalProps)
             </button>
           </div>
         ) : (
-          <form onSubmit={submitLead} className="p-6">
+          <div className="p-6">
             <div className="grid gap-3 sm:grid-cols-3">
               {contactChoices.map((item) => (
                 <button
@@ -174,87 +175,142 @@ export function DirectContractModal({ plan, onClose }: DirectContractModalProps)
             </div>
 
             {choice === "office" ? (
-              <div className="mt-6 rounded-lg border border-nimbus-line bg-nimbus-soft p-5 text-sm leading-7 text-nimbus-muted">
-                <p className="font-black text-nimbus-ink">{dictionary.modal.officeTitle}</p>
-                <p>{dictionary.modal.officePhone}</p>
-                <p>{dictionary.modal.officeWhatsapp}</p>
-                <p className="mt-2">{dictionary.modal.officeText}</p>
+              <div className="mt-6 overflow-hidden rounded-lg border border-nimbus-line bg-nimbus-soft">
+                <iframe
+                  title={dictionary.modal.officeMapTitle}
+                  src={GOOGLE_MAPS_EMBED_URL}
+                  className="h-72 w-full border-0"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+                <div className="border-t border-nimbus-line bg-white p-4">
+                  <a
+                    href={GOOGLE_MAPS_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-sm font-black text-nimbus-orange transition hover:text-nimbus-orangeDark"
+                  >
+                    <VisualIcon name="map-pin" className="size-4" />
+                    {dictionary.modal.openMaps}
+                  </a>
+                </div>
               </div>
             ) : null}
 
-            <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              <div className="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden="true">
-                <label htmlFor="direct-contract-company">Empresa</label>
-                <input
-                  id="direct-contract-company"
-                  name="company"
-                  value={company}
-                  onChange={(event) => setCompany(event.target.value)}
-                  autoComplete="off"
-                  tabIndex={-1}
-                  aria-hidden="true"
-                />
-              </div>
-              <label className="text-sm font-bold text-nimbus-ink">
-                {dictionary.modal.name} {requiresContact ? "" : dictionary.modal.optional}
-                <input
-                  value={name}
-                  onChange={(event) => setName(event.target.value)}
-                  className="mt-2 w-full rounded-lg border border-nimbus-line px-4 py-3 font-normal text-nimbus-ink"
-                  autoComplete="name"
-                />
-              </label>
-              <label className="text-sm font-bold text-nimbus-ink">
-                {dictionary.modal.phone} {requiresContact ? "" : dictionary.modal.optional}
-                <input
-                  value={phone}
-                  onChange={(event) => setPhone(event.target.value)}
-                  className="mt-2 w-full rounded-lg border border-nimbus-line px-4 py-3 font-normal text-nimbus-ink"
-                  autoComplete="tel"
-                />
-              </label>
-              <label className="text-sm font-bold text-nimbus-ink sm:col-span-2">
-                {dictionary.modal.emailOptional}
-                <input
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                  className="mt-2 w-full rounded-lg border border-nimbus-line px-4 py-3 font-normal text-nimbus-ink"
-                  autoComplete="email"
-                />
-              </label>
-            </div>
+            {choice !== "office" ? (
+              <form onSubmit={submitLead} className="mt-6">
+                {choice === "whatsapp" ? (
+                  <p className="mb-5 rounded-lg bg-nimbus-soft p-4 text-sm font-bold leading-6 text-nimbus-ink">
+                    {dictionary.modal.whatsappIntro}
+                  </p>
+                ) : null}
 
-            <LegalConsentCheckbox
-              id="direct-contract-consent"
-              checked={consent}
-              onChange={setConsent}
-              error={consentError}
-            />
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden="true">
+                    <label htmlFor="direct-contract-company">Empresa</label>
+                    <input
+                      id="direct-contract-company"
+                      name="company"
+                      value={company}
+                      onChange={(event) => setCompany(event.target.value)}
+                      autoComplete="off"
+                      tabIndex={-1}
+                      aria-hidden="true"
+                    />
+                  </div>
+                  <Field label={dictionary.modal.name} value={name} onChange={setName} autoComplete="name" required />
+                  <Field label={dictionary.modal.phone} value={phone} onChange={setPhone} autoComplete="tel" required />
+                </div>
 
-            {choice === "whatsapp" ? (
-              <button
-                type="button"
-                onClick={openWhatsapp}
-                className="mt-5 w-full rounded-full border border-nimbus-orange px-5 py-3 text-sm font-black text-nimbus-orange transition hover:bg-orange-50"
-              >
-                {dictionary.modal.openWhatsapp}
-              </button>
+                <LegalConsentCheckbox
+                  id="direct-contract-consent"
+                  checked={consent}
+                  onChange={setConsent}
+                  error={consentError}
+                />
+
+                {choice === "whatsapp" ? (
+                  <button
+                    type="button"
+                    onClick={openWhatsapp}
+                    className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3 text-sm font-black text-white transition hover:bg-[#1FAF55] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#25D366]"
+                  >
+                    <WhatsappIcon />
+                    {dictionary.modal.talkWhatsapp}
+                  </button>
+                ) : null}
+
+                {error && !consentError ? (
+                  <p className="mt-4 rounded-lg bg-red-50 p-3 text-sm font-bold text-red-700">{error}</p>
+                ) : null}
+
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="mt-5 w-full rounded-full bg-nimbus-orange px-5 py-3 text-sm font-black text-white transition hover:bg-nimbus-orangeDark disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {isSubmitting ? dictionary.modal.submitting : dictionary.modal.submit}
+                </button>
+              </form>
             ) : null}
-
-            {error && !consentError ? (
-              <p className="mt-4 rounded-lg bg-red-50 p-3 text-sm font-bold text-red-700">{error}</p>
-            ) : null}
-
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="mt-5 w-full rounded-full bg-nimbus-orange px-5 py-3 text-sm font-black text-white transition hover:bg-nimbus-orangeDark disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {isSubmitting ? dictionary.modal.submitting : dictionary.modal.submit}
-            </button>
-          </form>
+          </div>
         )}
       </div>
     </div>
+  );
+}
+
+function Field({
+  label,
+  value,
+  onChange,
+  autoComplete,
+  required = false,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  autoComplete: string;
+  required?: boolean;
+}) {
+  return (
+    <label className="text-sm font-bold text-nimbus-ink">
+      <RequiredLabel label={label} required={required} />
+      <input
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        className="mt-2 w-full rounded-lg border border-nimbus-line px-4 py-3 font-normal text-nimbus-ink"
+        autoComplete={autoComplete}
+        inputMode={autoComplete === "tel" ? "numeric" : undefined}
+        pattern={autoComplete === "tel" ? "[0-9]{9}" : undefined}
+      />
+    </label>
+  );
+}
+
+function RequiredLabel({ label, required }: { label: string; required: boolean }) {
+  return (
+    <>
+      {label}
+      {required ? <span className="ml-1 text-red-600" aria-hidden="true">*</span> : null}
+    </>
+  );
+}
+
+function WhatsappIcon() {
+  return (
+    <svg aria-hidden="true" className="size-5" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M5.6 18.4A8.5 8.5 0 1 1 12 21a8.4 8.4 0 0 1-3.9-.95L4 21l.95-4.05A8.4 8.4 0 0 1 5.6 18.4Z"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M9.2 8.7c.2-.4.35-.45.65-.45h.5c.2 0 .45.05.6.45l.6 1.4c.1.3.05.5-.15.7l-.35.4c.55 1 1.35 1.8 2.45 2.35l.45-.35c.2-.2.45-.25.7-.15l1.45.65c.35.15.4.4.4.6v.45c0 .35-.1.55-.45.75-.45.25-1.1.4-1.75.25-2.65-.6-5.15-3-5.9-5.65-.2-.65 0-1.35.3-1.9Z"
+        fill="currentColor"
+      />
+    </svg>
   );
 }

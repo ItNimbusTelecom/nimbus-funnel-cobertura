@@ -2,30 +2,27 @@ import { z } from "zod";
 import {
   AntiSpamSchema,
   LanguageSchema,
+  OptionalEmailSchema,
   OptionalTrimmedString,
+  PersonNameSchema,
   PreferredContactMethodSchema,
-  requirePhoneOrEmail
+  RequiredSpanishPhoneSchema
 } from "./common.js";
 
-export const LeadSchema = z
-  .object({
-    name: z.string().trim().min(1, "Name is required"),
-    phone: OptionalTrimmedString,
-    email: OptionalTrimmedString,
-    preferredContactMethod: PreferredContactMethodSchema,
-    message: OptionalTrimmedString,
-    source: OptionalTrimmedString,
-    language: LanguageSchema,
-    pageUrl: OptionalTrimmedString,
-    antiSpam: AntiSpamSchema,
-    consentAccepted: z.literal(true, {
-      errorMap: () => ({ message: "Consent must be accepted" })
-    }),
-    recaptchaToken: OptionalTrimmedString
-  })
-  .refine(requirePhoneOrEmail, {
-    message: "Phone or email is required",
-    path: ["phone"]
-  });
+export const LeadSchema = z.object({
+  name: PersonNameSchema,
+  phone: RequiredSpanishPhoneSchema,
+  email: OptionalEmailSchema,
+  preferredContactMethod: PreferredContactMethodSchema,
+  message: OptionalTrimmedString,
+  source: OptionalTrimmedString,
+  language: LanguageSchema,
+  pageUrl: OptionalTrimmedString,
+  antiSpam: AntiSpamSchema,
+  consentAccepted: z.literal(true, {
+    errorMap: () => ({ message: "Consent must be accepted" })
+  }),
+  recaptchaToken: OptionalTrimmedString
+});
 
 export type LeadInput = z.infer<typeof LeadSchema>;

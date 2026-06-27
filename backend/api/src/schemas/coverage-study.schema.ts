@@ -2,18 +2,20 @@ import { z } from "zod";
 import {
   AntiSpamSchema,
   LanguageSchema,
+  OptionalSpanishPhoneSchema,
   OptionalTrimmedString,
+  PersonNameSchema,
   PreferredContactMethodSchema,
-  requirePhoneOrEmail
+  RequiredEmailSchema
 } from "./common.js";
 
 export const ServiceTypeSchema = z.enum(["mobile", "fiber", "internet", "business", "unknown"]);
 
 export const CoverageStudySchema = z
   .object({
-    name: z.string().trim().min(1, "Name is required"),
-    phone: OptionalTrimmedString,
-    email: OptionalTrimmedString,
+    name: PersonNameSchema,
+    phone: OptionalSpanishPhoneSchema,
+    email: RequiredEmailSchema,
     problemLocationText: OptionalTrimmedString,
     problemLocationType: OptionalTrimmedString,
     preferredContactMethod: PreferredContactMethodSchema,
@@ -28,8 +30,8 @@ export const CoverageStudySchema = z
     }),
     recaptchaToken: OptionalTrimmedString
   })
-  .refine(requirePhoneOrEmail, {
-    message: "Phone or email is required",
+  .refine((value) => value.preferredContactMethod === "office" || value.preferredContactMethod === "email" || Boolean(value.phone), {
+    message: "Phone is required for phone or WhatsApp contact",
     path: ["phone"]
   })
   .refine((value) => Boolean(value.problemLocationText || value.problemLocationType), {

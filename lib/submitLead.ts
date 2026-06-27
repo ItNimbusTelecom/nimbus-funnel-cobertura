@@ -152,7 +152,7 @@ function toAntiSpamPayload(payload: LegacyLeadPayload) {
 }
 
 function toPreferredContactMethod(value: unknown) {
-  if (value === "whatsapp" || value === "email") {
+  if (value === "whatsapp" || value === "email" || value === "office") {
     return value;
   }
 

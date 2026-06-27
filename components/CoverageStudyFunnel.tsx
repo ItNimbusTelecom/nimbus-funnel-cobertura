@@ -3,13 +3,14 @@
 import { FormEvent, useState } from "react";
 import { trackEvent } from "@/lib/analytics";
 import { getElapsedSeconds } from "@/lib/antispam";
+import { isValidEmail, isValidPersonName, isValidSpanishPhone } from "@/lib/formValidation";
 import { useI18n } from "@/lib/i18n";
 import { submitLead } from "@/lib/submitLead";
 import { getLeadSource } from "@/lib/utm";
 import { LegalConsentCheckbox } from "./LegalConsentCheckbox";
 import { VisualIcon } from "./VisualIcon";
 
-type PreferredContact = "phone" | "whatsapp" | "email";
+type PreferredContact = "phone" | "whatsapp";
 
 export function CoverageStudyFunnel() {
   const { dictionary } = useI18n();
@@ -28,6 +29,8 @@ export function CoverageStudyFunnel() {
   const [company, setCompany] = useState("");
   const [formStartedAt, setFormStartedAt] = useState(() => new Date().toISOString());
   const [error, setError] = useState("");
+  const [contactError, setContactError] = useState("");
+  const [hasTriedContactSubmit, setHasTriedContactSubmit] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [completed, setCompleted] = useState(false);
 
@@ -39,7 +42,8 @@ export function CoverageStudyFunnel() {
     completed,
   ].filter(Boolean).length;
   const progress = completed ? 100 : Math.round((completedSteps / 5) * 100);
-  const consentError = error === dictionary.form.errors.consent ? error : undefined;
+  const visibleError = step === 5 ? (hasTriedContactSubmit ? contactError : "") : error;
+  const consentError = visibleError === dictionary.form.errors.consent ? visibleError : undefined;
 
   function startIfNeeded() {
     if (step === 1 && !coverageProblem) {
@@ -89,6 +93,8 @@ export function CoverageStudyFunnel() {
     }
 
     if (step === 4) {
+      setHasTriedContactSubmit(false);
+      setContactError("");
       trackEvent("estudio_cobertura_ready_for_contact", { funnel: "cobertura-movil" });
     }
 
@@ -116,17 +122,19 @@ export function CoverageStudyFunnel() {
     setCompany("");
     setFormStartedAt(new Date().toISOString());
     setError("");
+    setContactError("");
+    setHasTriedContactSubmit(false);
     setCompleted(false);
   }
 
   function validateContact() {
-    if (!name.trim()) {
+    if (!isValidPersonName(name)) {
       return dictionary.form.errors.name;
     }
-    if ((preferredContact === "phone" || preferredContact === "whatsapp") && !phone.trim()) {
+    if (!isValidSpanishPhone(phone)) {
       return dictionary.form.errors.phone;
     }
-    if (preferredContact === "email" && !email.trim()) {
+    if (!isValidEmail(email)) {
       return dictionary.form.errors.email;
     }
     if (!consent) {
@@ -137,8 +145,9 @@ export function CoverageStudyFunnel() {
 
   async function submitStudy(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setHasTriedContactSubmit(true);
     const validationError = validateContact();
-    setError(validationError);
+    setContactError(validationError);
 
     if (validationError) {
       return;
@@ -182,7 +191,7 @@ export function CoverageStudyFunnel() {
       setCompleted(true);
     } catch (submitError) {
       trackEvent("estudio_cobertura_submit_error", { preferred_contact: preferredContact });
-      setError(submitError instanceof Error ? submitError.message : dictionary.form.errors.submit);
+      setContactError(submitError instanceof Error ? submitError.message : dictionary.form.errors.submit);
     } finally {
       setIsSubmitting(false);
     }
@@ -302,12 +311,16 @@ export function CoverageStudyFunnel() {
                 <form id="coverage-study-contact" onSubmit={submitStudy}>
                   <QuestionStep title={dictionary.form.step5Title}>
                     <p className="mb-5 text-sm leading-6 text-nimbus-muted">{dictionary.form.step5Text}</p>
-                    <div className="grid gap-3 sm:grid-cols-3">
-                      {(["phone", "whatsapp", "email"] as PreferredContact[]).map((option) => (
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      {(["phone", "whatsapp"] as PreferredContact[]).map((option) => (
                         <button
                           key={option}
                           type="button"
-                          onClick={() => setPreferredContact(option)}
+                          onClick={() => {
+                            setPreferredContact(option);
+                            setContactError("");
+                            setHasTriedContactSubmit(false);
+                          }}
                           className={`flex items-center gap-2 rounded-lg border px-4 py-3 text-left text-sm font-black transition ${
                             preferredContact === option
                               ? "border-nimbus-orange bg-orange-50 text-nimbus-ink"
@@ -333,20 +346,39 @@ export function CoverageStudyFunnel() {
                           aria-hidden="true"
                         />
                       </div>
-                      <Field label={dictionary.form.fields.name} value={name} onChange={setName} autoComplete="name" required />
                       <Field
-                        label={preferredContact === "email" ? dictionary.form.fields.phoneOptional : dictionary.form.fields.phone}
-                        value={phone}
-                        onChange={setPhone}
-                        autoComplete="tel"
-                        required={preferredContact !== "email"}
+                        label={dictionary.form.fields.name}
+                        value={name}
+                        onChange={(value) => {
+                          setName(value);
+                          setContactError("");
+                          setHasTriedContactSubmit(false);
+                        }}
+                        autoComplete="name"
+                        required
                       />
                       <Field
-                        label={preferredContact === "email" ? dictionary.form.fields.email : dictionary.form.fields.emailOptional}
+                        label={dictionary.form.fields.phone}
+                        value={phone}
+                        onChange={(value) => {
+                          setPhone(value);
+                          setContactError("");
+                          setHasTriedContactSubmit(false);
+                        }}
+                        autoComplete="tel"
+                        required
+                      />
+                      <Field
+                        label={dictionary.form.fields.email}
                         value={email}
-                        onChange={setEmail}
+                        onChange={(value) => {
+                          setEmail(value);
+                          setContactError("");
+                          setHasTriedContactSubmit(false);
+                        }}
                         autoComplete="email"
-                        required={preferredContact === "email"}
+                        helpText={dictionary.form.emailHelp}
+                        required
                       />
                       <Field
                         label={dictionary.form.fields.currentOperator}
@@ -368,15 +400,19 @@ export function CoverageStudyFunnel() {
                     <LegalConsentCheckbox
                       id="coverage-study-consent"
                       checked={consent}
-                      onChange={setConsent}
+                      onChange={(checked) => {
+                        setConsent(checked);
+                        setContactError("");
+                        setHasTriedContactSubmit(false);
+                      }}
                       error={consentError}
                     />
                   </QuestionStep>
                 </form>
               ) : null}
 
-              {error && !consentError ? (
-                <p className="mt-5 rounded-lg bg-red-50 p-3 text-sm font-bold text-red-700">{error}</p>
+              {visibleError && !consentError ? (
+                <p className="mt-5 rounded-lg bg-red-50 p-3 text-sm font-bold text-red-700">{visibleError}</p>
               ) : null}
 
               <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
@@ -458,24 +494,33 @@ function Field({
   value,
   onChange,
   autoComplete,
+  helpText,
   required = false,
 }: {
   label: string;
   value: string;
   onChange: (value: string) => void;
   autoComplete: string;
+  helpText?: string;
   required?: boolean;
 }) {
+  const isPhone = autoComplete === "tel";
+  const isEmail = autoComplete === "email";
+
   return (
     <label className="text-sm font-bold text-nimbus-ink">
       {label}
-      {required ? "" : ""}
+      {required ? <span className="ml-1 text-red-600" aria-hidden="true">*</span> : null}
       <input
         value={value}
         onChange={(event) => onChange(event.target.value)}
         className="mt-2 w-full rounded-lg border border-nimbus-line px-4 py-3 font-normal text-nimbus-ink"
         autoComplete={autoComplete}
+        inputMode={isPhone ? "numeric" : isEmail ? "email" : undefined}
+        pattern={isPhone ? "[0-9]{9}" : undefined}
+        type={isEmail ? "email" : "text"}
       />
+      {helpText ? <span className="mt-2 block text-xs font-bold leading-5 text-nimbus-muted">{helpText}</span> : null}
     </label>
   );
 }
@@ -500,5 +545,5 @@ function preferredContactIcon(value: PreferredContact) {
   if (value === "whatsapp") {
     return "message-circle" as const;
   }
-  return "mail" as const;
+  return "phone" as const;
 }
