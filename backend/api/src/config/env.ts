@@ -6,10 +6,9 @@ export type AppConfig = {
   frontendAllowedOrigins: string[];
   recaptchaEnabled: boolean;
   recaptchaSecret?: string;
-  emailNotificationsEnabled: boolean;
-  sesRegion?: string;
-  sesFromEmail?: string;
-  leadsNotificationTo?: string;
+  makeWebhookUrl?: string;
+  makeLeadWebhookUrl?: string;
+  makeCoverageWebhookUrl?: string;
 };
 
 function parseBoolean(value: string | undefined, fallback: boolean) {
@@ -32,9 +31,8 @@ export function getConfig(): AppConfig {
     frontendAllowedOrigins: parseOrigins(process.env.FRONTEND_ALLOWED_ORIGINS),
     recaptchaEnabled: parseBoolean(process.env.RECAPTCHA_ENABLED, false),
     recaptchaSecret: process.env.RECAPTCHA_SECRET,
-    emailNotificationsEnabled: parseBoolean(process.env.EMAIL_NOTIFICATIONS_ENABLED, true),
-    sesRegion: process.env.SES_REGION,
-    sesFromEmail: process.env.SES_FROM_EMAIL,
-    leadsNotificationTo: process.env.LEADS_NOTIFICATION_TO
+    makeWebhookUrl: process.env.MAKE_WEBHOOK_URL,
+    makeLeadWebhookUrl: process.env.MAKE_LEAD_WEBHOOK_URL,
+    makeCoverageWebhookUrl: process.env.MAKE_COVERAGE_WEBHOOK_URL
   };
 }

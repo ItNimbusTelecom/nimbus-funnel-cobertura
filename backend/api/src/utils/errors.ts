@@ -18,6 +18,12 @@ export class ValidationError extends AppError {
   }
 }
 
+export class SpamRejectedError extends AppError {
+  constructor(message: string) {
+    super("SPAM_REJECTED", message, 200);
+  }
+}
+
 export function formatZodError(error: ZodError) {
   return error.issues.map((issue) => `${issue.path.join(".")}: ${issue.message}`).join("; ");
 }
@@ -25,6 +31,14 @@ export function formatZodError(error: ZodError) {
 export function errorHandler(error: unknown, _req: Request, res: Response, _next: NextFunction) {
   if (error instanceof ZodError) {
     return sendError(res, "VALIDATION_ERROR", formatZodError(error), 400);
+  }
+
+  if (error instanceof SpamRejectedError) {
+    if (process.env.NODE_ENV !== "production") {
+      console.log(error.message);
+    }
+
+    return res.status(200).json({ ok: true, data: { spam: true } });
   }
 
   if (error instanceof AppError) {

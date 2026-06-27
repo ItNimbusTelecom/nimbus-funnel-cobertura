@@ -9,7 +9,7 @@ Backend serverless para el funnel de cobertura móvil de Nimbus Telecom.
 - AWS Lambda recibe las peticiones HTTP.
 - API Gateway HTTP API expone los endpoints públicos.
 - DynamoDB guarda los leads, estudios de cobertura e intenciones de contacto.
-- Amazon SES envía notificaciones internas cuando llega un lead o estudio.
+- Después de guardar un lead o estudio, Lambda dispara un webhook de Make.com para que Make gestione emails, avisos o el cierre comercial.
 
 No usa base de datos relacional, autenticación, colas, Cognito, Middy ni NestJS.
 
@@ -143,10 +143,9 @@ TABLE_NAME=
 FRONTEND_ALLOWED_ORIGINS=http://localhost:3000,https://example.com
 RECAPTCHA_ENABLED=false
 RECAPTCHA_SECRET=
-EMAIL_NOTIFICATIONS_ENABLED=true
-SES_REGION=eu-west-1
-SES_FROM_EMAIL="Nimbus Telecom <info@nimbustelecom.es>"
-LEADS_NOTIFICATION_TO=
+MAKE_WEBHOOK_URL=
+MAKE_LEAD_WEBHOOK_URL=
+MAKE_COVERAGE_WEBHOOK_URL=
 ```
 
 Frontend:
@@ -155,19 +154,25 @@ Frontend:
 NEXT_PUBLIC_API_BASE_URL=
 ```
 
-## Amazon SES
+## Make.com
 
-Configurar:
+Configurar preferiblemente dos escenarios de Make:
 
-- `SES_REGION`: región donde está configurado SES. Si se omite, usa la región del Lambda.
-- `SES_FROM_EMAIL`: remitente verificado en SES.
-- `LEADS_NOTIFICATION_TO`: buzón interno que recibirá avisos
+- `MAKE_LEAD_WEBHOOK_URL`: webhook para solicitudes de tarifa desde `/leads`.
+- `MAKE_COVERAGE_WEBHOOK_URL`: webhook para estudios de cobertura desde `/coverage-study`.
+- `MAKE_WEBHOOK_URL`: fallback opcional si se quiere enviar todo a un único webhook.
 
-El Lambda recibe permisos IAM para `ses:SendEmail`.
-Antes de producción, confirma que `SES_FROM_EMAIL` esté verificado en SES y que la cuenta tenga permisos de envío fuera del sandbox si vas a escribir a destinatarios no verificados.
+El webhook correspondiente se dispara después de guardar correctamente en DynamoDB.
+Si Make falla, el lead no se pierde: queda guardado en DynamoDB y la API responde éxito.
 
-Si falta configuración SES, la API guarda el lead y omite el email con un warning en logs.
-Si el email falla, el lead no se pierde: queda guardado en DynamoDB y la API responde éxito.
+Formatos aceptados:
+
+```bash
+MAKE_LEAD_WEBHOOK_URL=https://hook.eu1.make.com/<token>
+MAKE_COVERAGE_WEBHOOK_URL=https://hook.eu1.make.com/<token>
+```
+
+También se acepta el formato abreviado `<token>@hook.eu1.make.com`, que Lambda normaliza internamente a la URL HTTPS de Make.
 
 ## reCAPTCHA
 
@@ -238,9 +243,7 @@ Deploy dev:
 cd backend/infra
 STAGE=dev \
 FRONTEND_ALLOWED_ORIGINS=https://tu-frontend.com \
-SES_REGION=eu-west-1 \
-SES_FROM_EMAIL="Nimbus Telecom <info@nimbustelecom.es>" \
-LEADS_NOTIFICATION_TO=... \
+MAKE_WEBHOOK_URL=https://hook.eu1.make.com/<token> \
 npm run deploy -- --context stage=dev
 ```
 
@@ -254,7 +257,7 @@ STAGE=prod npm run deploy -- --context stage=prod
 ## Secretos En Producción
 
 El stack acepta variables de entorno para simplificar el primer despliegue.
-Para producción se recomienda mover `RECAPTCHA_SECRET` y cualquier secreto futuro a AWS Secrets Manager o SSM Parameter Store y resolverlos desde CDK/Lambda.
+Para producción se recomienda mover `MAKE_WEBHOOK_URL`, `RECAPTCHA_SECRET` y cualquier secreto futuro a AWS Secrets Manager o SSM Parameter Store y resolverlos desde CDK/Lambda.
 
 ## Conectar El Frontend
 
@@ -280,7 +283,8 @@ Incluido:
 - Consentimiento obligatorio.
 - CORS configurable.
 - reCAPTCHA preparado y desactivable.
-- Guardado antes del envío de email para no perder leads.
+- Filtro anti-spam básico en Lambda.
+- Guardado antes del envío a Make para no perder leads.
 
 Recomendado para producción:
 
@@ -288,12 +292,12 @@ Recomendado para producción:
 - Configurar AWS WAF si hay abuso.
 - Ajustar throttling a nivel API Gateway/CloudFront.
 - Mover secretos a Secrets Manager o SSM Parameter Store.
-- Crear alarmas CloudWatch para errores 4xx/5xx y fallos de email.
+- Crear alarmas CloudWatch para errores 4xx/5xx y fallos al llamar Make.
 
 ## Siguientes Pasos Recomendados
 
 - Conectar los formularios actuales del funnel a `NEXT_PUBLIC_API_BASE_URL`.
 - Añadir trazabilidad comercial por UTM y evento en `metadata`.
 - Definir buzón operativo de recepción de leads.
-- Crear flujo externo de seguimiento comercial o email automation.
+- Crear flujo externo en Make para email, seguimiento comercial o cierre.
 - Añadir dashboard interno o exportación controlada cuando el volumen lo justifique.

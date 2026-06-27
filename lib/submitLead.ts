@@ -34,6 +34,11 @@ type LegacyLeadPayload = {
     preferredContact?: unknown;
     consent?: unknown;
   };
+  antiSpam?: {
+    formStartedAt?: unknown;
+    elapsedSeconds?: unknown;
+    honeypot?: unknown;
+  };
 };
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -48,18 +53,7 @@ export async function submitLead(payload: unknown) {
     return { ok: true, mock: true };
   }
 
-  const response = await fetch("/api/leads/cobertura-movil", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-  const data = await response.json();
-
-  if (!response.ok || !data.ok) {
-    throw new Error(data.error || "No hemos podido enviar la solicitud.");
-  }
-
-  return data;
+  throw new Error("NEXT_PUBLIC_API_BASE_URL no está configurado.");
 }
 
 async function submitToServerlessApi(payload: unknown) {
@@ -106,6 +100,7 @@ function toLeadPayload(payload: LegacyLeadPayload) {
     source: getSourceLabel(payload),
     language: getCurrentLocale(),
     pageUrl: getPageUrl(payload),
+    antiSpam: toAntiSpamPayload(payload),
     consentAccepted: contact.consent === true,
   };
 }
@@ -140,7 +135,21 @@ function toCoverageStudyPayload(payload: LegacyLeadPayload) {
     serviceType: "mobile",
     language: getCurrentLocale(),
     pageUrl: getPageUrl(payload),
+    antiSpam: toAntiSpamPayload(payload),
     consentAccepted: contact.consent === true,
+  };
+}
+
+function toAntiSpamPayload(payload: LegacyLeadPayload) {
+  const antiSpam = payload.antiSpam ?? {};
+
+  return {
+    formStartedAt:
+      typeof antiSpam.formStartedAt === "string" || typeof antiSpam.formStartedAt === "number"
+        ? antiSpam.formStartedAt
+        : undefined,
+    elapsedSeconds: typeof antiSpam.elapsedSeconds === "number" ? antiSpam.elapsedSeconds : undefined,
+    honeypot: toText(antiSpam.honeypot),
   };
 }
 

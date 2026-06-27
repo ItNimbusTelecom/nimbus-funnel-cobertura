@@ -1,5 +1,6 @@
 import { z } from "zod";
 import {
+  AntiSpamSchema,
   LanguageSchema,
   OptionalTrimmedString,
   PreferredContactMethodSchema,
@@ -16,6 +17,7 @@ export const LeadSchema = z
     source: OptionalTrimmedString,
     language: LanguageSchema,
     pageUrl: OptionalTrimmedString,
+    antiSpam: AntiSpamSchema,
     consentAccepted: z.literal(true, {
       errorMap: () => ({ message: "Consent must be accepted" })
     }),

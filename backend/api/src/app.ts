@@ -8,14 +8,16 @@ import { createHealthRouter } from "./routes/health.js";
 import { createLeadsRouter } from "./routes/leads.js";
 import { ContactIntentService } from "./services/ContactIntentService.js";
 import { CoverageStudyService } from "./services/CoverageStudyService.js";
-import { EmailService, IEmailService } from "./services/EmailService.js";
+import { AntiSpamService, IAntiSpamService } from "./services/AntiSpamService.js";
 import { LeadService } from "./services/LeadService.js";
+import { IMakeWebhookService, MakeWebhookService } from "./services/MakeWebhookService.js";
 import { IRecaptchaService, RecaptchaService } from "./services/RecaptchaService.js";
 import { errorHandler } from "./utils/errors.js";
 
 export type AppDependencies = {
   repository?: IFunnelRepository;
-  emailService?: IEmailService;
+  makeWebhookService?: IMakeWebhookService;
+  antiSpamService?: IAntiSpamService;
   recaptchaService?: IRecaptchaService;
 };
 
@@ -38,12 +40,13 @@ export function createApp(deps: AppDependencies = {}) {
   );
 
   const repository = deps.repository ?? new FunnelRepository();
-  const emailService = deps.emailService ?? new EmailService();
+  const makeWebhookService = deps.makeWebhookService ?? new MakeWebhookService();
+  const antiSpamService = deps.antiSpamService ?? new AntiSpamService();
   const recaptchaService = deps.recaptchaService ?? new RecaptchaService();
 
   app.use(createHealthRouter());
-  app.use(createLeadsRouter(new LeadService(repository, emailService, recaptchaService)));
-  app.use(createCoverageStudyRouter(new CoverageStudyService(repository, emailService, recaptchaService)));
+  app.use(createLeadsRouter(new LeadService(repository, makeWebhookService, antiSpamService, recaptchaService)));
+  app.use(createCoverageStudyRouter(new CoverageStudyService(repository, makeWebhookService, antiSpamService, recaptchaService)));
   app.use(createContactIntentRouter(new ContactIntentService(repository)));
 
   app.use(errorHandler);

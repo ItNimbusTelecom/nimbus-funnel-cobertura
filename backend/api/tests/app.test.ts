@@ -2,30 +2,30 @@ import { describe, expect, it, vi } from "vitest";
 import serverless from "serverless-http";
 import { createApp } from "../src/app.js";
 import { mapRecordToItem, IFunnelRepository } from "../src/repositories/FunnelRepository.js";
-import { IEmailService } from "../src/services/EmailService.js";
+import { AntiSpamService, IAntiSpamService } from "../src/services/AntiSpamService.js";
+import { IMakeWebhookService } from "../src/services/MakeWebhookService.js";
 import { IRecaptchaService } from "../src/services/RecaptchaService.js";
 
-function createTestApp(options?: { emailThrows?: boolean }) {
+function createTestApp(options?: { webhookThrows?: boolean; useRealAntiSpam?: boolean }) {
   const repository: IFunnelRepository = {
     async create(record) {
       return mapRecordToItem(record, new Date("2026-01-01T10:00:00.000Z"));
     }
   };
 
-  const emailService: IEmailService = {
-    sendLeadNotification: vi.fn(async () => {
-      if (options?.emailThrows) throw new Error("SES failed");
-    }),
-    sendCoverageStudyNotification: vi.fn(async () => {
-      if (options?.emailThrows) throw new Error("SES failed");
+  const makeWebhookService: IMakeWebhookService = {
+    send: vi.fn(async () => {
+      if (options?.webhookThrows) throw new Error("Make failed");
     })
   };
+
+  const antiSpamService: IAntiSpamService = options?.useRealAntiSpam ? new AntiSpamService() : { validate: vi.fn(() => undefined) };
 
   const recaptchaService: IRecaptchaService = {
     verify: vi.fn(async () => undefined)
   };
 
-  return createApp({ repository, emailService, recaptchaService });
+  return createApp({ repository, makeWebhookService, antiSpamService, recaptchaService });
 }
 
 async function invoke(app: ReturnType<typeof createTestApp>, method: string, path: string, body?: unknown) {
@@ -227,8 +227,8 @@ describe("Nimbus funnel API", () => {
     expect(response.body.error.code).toBe("VALIDATION_ERROR");
   });
 
-  it("keeps the lead flow successful if email notification fails", async () => {
-    const response = await invoke(createTestApp({ emailThrows: true }), "POST", "/leads", {
+  it("keeps the lead flow successful if Make webhook fails after saving", async () => {
+    const response = await invoke(createTestApp({ webhookThrows: true }), "POST", "/leads", {
       name: "Patricia",
       phone: "972850155",
       preferredContactMethod: "phone",
@@ -238,5 +238,23 @@ describe("Nimbus funnel API", () => {
 
     expect(response.status).toBe(201);
     expect(response.body.ok).toBe(true);
+  });
+
+  it("silently rejects honeypot spam before saving", async () => {
+    const response = await invoke(createTestApp({ useRealAntiSpam: true }), "POST", "/leads", {
+      name: "Patricia",
+      phone: "972850155",
+      preferredContactMethod: "phone",
+      language: "es",
+      consentAccepted: true,
+      antiSpam: {
+        formStartedAt: new Date(Date.now() - 10_000).toISOString(),
+        elapsedSeconds: 10,
+        honeypot: "bot company"
+      }
+    });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ ok: true, data: { spam: true } });
   });
 });

@@ -4,7 +4,6 @@ import * as cdk from "aws-cdk-lib";
 import * as apigatewayv2 from "aws-cdk-lib/aws-apigatewayv2";
 import * as integrations from "aws-cdk-lib/aws-apigatewayv2-integrations";
 import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
-import * as iam from "aws-cdk-lib/aws-iam";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as nodejs from "aws-cdk-lib/aws-lambda-nodejs";
 import * as logs from "aws-cdk-lib/aws-logs";
@@ -22,8 +21,6 @@ export class NimbusFunnelBackendStack extends cdk.Stack {
 
     const allowedOrigins = this.node.tryGetContext("allowedOrigins") ?? process.env.FRONTEND_ALLOWED_ORIGINS ?? "";
     const recaptchaEnabled = this.node.tryGetContext("recaptchaEnabled") ?? process.env.RECAPTCHA_ENABLED ?? "false";
-    const emailNotificationsEnabled =
-      this.node.tryGetContext("emailNotificationsEnabled") ?? process.env.EMAIL_NOTIFICATIONS_ENABLED ?? "true";
     const tableNamePrefix = this.node.tryGetContext("tableNamePrefix") ?? "NimbusFunnel";
 
     const table = new dynamodb.Table(this, "NimbusFunnelTable", {
@@ -76,20 +73,13 @@ export class NimbusFunnelBackendStack extends cdk.Stack {
         FRONTEND_ALLOWED_ORIGINS: allowedOrigins,
         RECAPTCHA_ENABLED: recaptchaEnabled,
         RECAPTCHA_SECRET: process.env.RECAPTCHA_SECRET ?? "",
-        EMAIL_NOTIFICATIONS_ENABLED: emailNotificationsEnabled,
-        SES_REGION: process.env.SES_REGION ?? this.region,
-        SES_FROM_EMAIL: process.env.SES_FROM_EMAIL ?? "",
-        LEADS_NOTIFICATION_TO: process.env.LEADS_NOTIFICATION_TO ?? ""
+        MAKE_WEBHOOK_URL: process.env.MAKE_WEBHOOK_URL ?? "",
+        MAKE_LEAD_WEBHOOK_URL: process.env.MAKE_LEAD_WEBHOOK_URL ?? "",
+        MAKE_COVERAGE_WEBHOOK_URL: process.env.MAKE_COVERAGE_WEBHOOK_URL ?? ""
       }
     });
 
     table.grantReadWriteData(apiFunction);
-    apiFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        actions: ["ses:SendEmail"],
-        resources: ["*"]
-      })
-    );
 
     const httpApi = new apigatewayv2.HttpApi(this, "NimbusFunnelHttpApi", {
       apiName: `nimbus-funnel-api-${props.stage}`,

@@ -11,6 +11,14 @@ export const OptionalTrimmedString = z
 
 export const MetadataSchema = z.record(z.unknown()).optional();
 
+export const AntiSpamSchema = z
+  .object({
+    formStartedAt: z.union([z.string(), z.number()]).optional(),
+    elapsedSeconds: z.number().optional(),
+    honeypot: OptionalTrimmedString
+  })
+  .optional();
+
 export function requirePhoneOrEmail<T extends { phone?: string; email?: string }>(value: T) {
   return Boolean(value.phone || value.email);
 }
