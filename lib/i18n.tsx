@@ -125,10 +125,12 @@ export const translations = {
       scrollLeft: "Ver tarifas anteriores",
       scrollRight: "Ver más tarifas",
       carouselHint: "Desliza o usa las flechas para ver más tarifas",
+      promoNote:
+        "Tarifas JUNTS ESTIU válidas hasta el 30/09/2026. Promo de por vida mientras se mantenga la tarifa. No acumulable con otras promociones.",
       description: (data: string) =>
         `Incluye llamadas ilimitadas a fijos y móviles nacionales. Incluye ${data} de datos.`,
       features: [
-        "IVA incluido",
+        "Precio + IVA",
         "Sin permanencia",
         "Acumula gigas: los datos que no usas este mes, los tienes el siguiente.",
       ],
@@ -451,10 +453,12 @@ export const translations = {
       scrollLeft: "Veure tarifes anteriors",
       scrollRight: "Veure més tarifes",
       carouselHint: "Fes lliscar o usa les fletxes per veure més tarifes",
+      promoNote:
+        "Tarifes JUNTS ESTIU vàlides fins al 30/09/2026. Promo de per vida mentre es mantingui la tarifa. No acumulable amb altres promocions.",
       description: (data: string) =>
         `Inclou trucades il·limitades a fixos i mòbils nacionals. Inclou ${data} de dades.`,
       features: [
-        "IVA inclòs",
+        "Preu + IVA",
         "Sense permanència",
         "Acumula gigues: les dades que no fas servir aquest mes, les tens el següent.",
       ],
@@ -775,10 +779,12 @@ export const translations = {
       scrollLeft: "View previous plans",
       scrollRight: "View more plans",
       carouselHint: "Swipe or use the arrows to view more plans",
+      promoNote:
+        "JUNTS ESTIU plans valid until 30/09/2026. Lifetime promo while keeping the same plan. Not combinable with other promotions.",
       description: (data: string) =>
         `Includes unlimited calls to national landlines and mobiles. Includes ${data} of data.`,
       features: [
-        "VAT included",
+        "Price + VAT",
         "No contract commitment",
         "Data rollover: the data you do not use this month is available next month.",
       ],

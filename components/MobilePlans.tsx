@@ -71,6 +71,7 @@ export function MobilePlans() {
             {dictionary.plans.title}
           </h2>
           <p className="mt-4 text-lg leading-8 text-nimbus-muted">{dictionary.plans.text}</p>
+          <p className="mt-3 text-sm font-bold leading-6 text-nimbus-muted">{dictionary.plans.promoNote}</p>
         </div>
 
         <div className="relative left-1/2 mt-10 w-[100dvw] -translate-x-1/2 overflow-hidden">

@@ -23,11 +23,14 @@ const ruralPlans = [
 ];
 
 const mobilePlans = [
-  { data: "30GB", price: "6,95€" },
-  { data: "60GB", price: "7,95€" },
-  { data: "100GB", price: "10,95€" },
-  { data: "200GB", price: "14,95€" },
+  { data: "50GB", price: "6,95€" },
+  { data: "80GB", price: "7,95€" },
+  { data: "150GB", price: "10,95€" },
+  { data: "400GB", price: "14,95€" },
 ];
+
+const mobilePromoTerms =
+  "Tarifes JUNTS ESTIU vàlides fins al 30/09/2026. Promo de per vida mentre es mantingui la tarifa. No acumulable amb altres promocions.";
 
 const sharedDataPlans = [
   { data: "120GB", price: "21,90€" },
@@ -88,10 +91,10 @@ export default function OffersQrPage() {
               </h2>
               <div className="mt-5 grid gap-3 sm:grid-cols-2">
                 {mobilePlans.map((plan) => (
-                  <PricePill key={plan.data} label={plan.data} price={plan.price} />
+                  <PricePill key={plan.data} label={plan.data} price={plan.price} suffix="/mes + IVA" />
                 ))}
               </div>
-              <DiscountCallout compact />
+              <p className="mt-5 text-sm font-bold leading-6 text-nimbus-muted">{mobilePromoTerms}</p>
             </div>
           </div>
         </div>
@@ -247,12 +250,15 @@ function PromoCard({ eyebrow, title, icon, plans }: PromoCardProps) {
   );
 }
 
-function PricePill({ label, price }: { label: string; price: string }) {
+function PricePill({ label, price, suffix = "/mes" }: { label: string; price: string; suffix?: string }) {
   return (
     <div className="rounded-full bg-yellow-300 px-5 py-3 text-center text-lg font-black text-nimbus-ink">
       <span>{label}</span>
       <span aria-hidden="true"> - </span>
-      <span>{price}/mes</span>
+      <span>
+        {price}
+        {suffix}
+      </span>
     </div>
   );
 }
