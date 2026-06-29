@@ -1,4 +1,4 @@
-const PUBLIC_BASE_PATH = process.env.NEXT_PUBLIC_GITHUB_PAGES === "true" ? "/nimbus-funnel-cobertura" : "";
+const PUBLIC_BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 export const NIMBUS_LOGO_URL = `${PUBLIC_BASE_PATH}/brand/nimbus-logo-header.png`;
 export const NIMBUS_ANTENNA_IMAGE = `${PUBLIC_BASE_PATH}/brand/nimbus-antenna.webp`;

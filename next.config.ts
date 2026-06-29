@@ -6,8 +6,6 @@ const nextConfig: NextConfig = {
   ...(isGitHubPagesBuild
     ? {
         output: "export",
-        basePath: "/nimbus-funnel-cobertura",
-        assetPrefix: "/nimbus-funnel-cobertura/",
         trailingSlash: true,
       }
     : {}),
