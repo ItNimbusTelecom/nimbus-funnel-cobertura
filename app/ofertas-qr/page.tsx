@@ -283,7 +283,7 @@ function ContactButtons({ className = "" }: { className?: string }) {
         WhatsApp
       </a>
       <a
-        href="tel:+34622812604"
+        href={CONTACT_INFO.phoneHref}
         className="inline-flex items-center justify-center gap-2 rounded-full border border-nimbus-line bg-white px-5 py-3 text-sm font-black text-nimbus-ink shadow-sm transition hover:border-nimbus-orange hover:text-nimbus-orange"
       >
         <VisualIcon name="phone-call" className="size-5" />
