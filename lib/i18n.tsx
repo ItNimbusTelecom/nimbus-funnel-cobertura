@@ -130,7 +130,7 @@ export const translations = {
       description: (data: string) =>
         `Incluye llamadas ilimitadas a fijos y móviles nacionales. Incluye ${data} de datos.`,
       features: [
-        "Precio + IVA",
+        "Precio mensual",
         "Sin permanencia",
         "Acumula gigas: los datos que no usas este mes, los tienes el siguiente.",
       ],
@@ -458,7 +458,7 @@ export const translations = {
       description: (data: string) =>
         `Inclou trucades il·limitades a fixos i mòbils nacionals. Inclou ${data} de dades.`,
       features: [
-        "Preu + IVA",
+        "Preu mensual",
         "Sense permanència",
         "Acumula gigues: les dades que no fas servir aquest mes, les tens el següent.",
       ],
@@ -784,7 +784,7 @@ export const translations = {
       description: (data: string) =>
         `Includes unlimited calls to national landlines and mobiles. Includes ${data} of data.`,
       features: [
-        "Price + VAT",
+        "Monthly price",
         "No contract commitment",
         "Data rollover: the data you do not use this month is available next month.",
       ],

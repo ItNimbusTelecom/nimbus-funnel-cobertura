@@ -91,7 +91,7 @@ export default function OffersQrPage() {
               </h2>
               <div className="mt-5 grid gap-3 sm:grid-cols-2">
                 {mobilePlans.map((plan) => (
-                  <PricePill key={plan.data} label={plan.data} price={plan.price} suffix="/mes + IVA" />
+                  <PricePill key={plan.data} label={plan.data} price={plan.price} />
                 ))}
               </div>
               <p className="mt-5 text-sm font-bold leading-6 text-nimbus-muted">{mobilePromoTerms}</p>
