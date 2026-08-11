@@ -54,7 +54,7 @@ export class NimbusFunnelBackendStack extends cdk.Stack {
       depsLockFilePath: path.join(apiRoot, "package-lock.json"),
       handler: "handler",
       functionName: `nimbus-funnel-api-${props.stage}`,
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_22_X,
       memorySize: 256,
       timeout: cdk.Duration.seconds(15),
       logGroup: new logs.LogGroup(this, "NimbusFunnelApiLogGroup", {
