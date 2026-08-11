@@ -28,7 +28,7 @@ export function Footer() {
         </nav>
 
         <p className="mt-3">
-          © 2025 Nimbus Telecom. {dictionary.footer.rights}
+          © 2026 Nimbus Telecom. {dictionary.footer.rights}
           <br />
           {dictionary.footer.officialLinksPrefix}:{" "}
           <a
