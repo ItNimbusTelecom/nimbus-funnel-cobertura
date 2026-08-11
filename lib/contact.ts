@@ -35,18 +35,18 @@ export const SOCIAL_LINKS = [
 export const LEGAL_LINKS = [
   {
     label: "Aviso legal",
-    href: "https://nimbustelecom.cat/aviso-legal.html",
+    href: "https://nimbustelecom.cat/aviso-legal/",
   },
   {
     label: "Política de privacidad",
-    href: "https://nimbustelecom.cat/politica-de-privacidad.html",
+    href: "https://nimbustelecom.cat/politica-de-privacidad/",
   },
   {
     label: "Política de cookies",
-    href: "https://nimbustelecom.cat/politica-de-cookies.html",
+    href: "https://nimbustelecom.cat/politica-de-cookies/",
   },
   {
     label: "Declaración de accesibilidad",
-    href: "https://nimbustelecom.cat/declaracion-de-accesibilidad.html",
+    href: "https://nimbustelecom.cat/declaracion-de-accesibilidad/",
   },
 ];
