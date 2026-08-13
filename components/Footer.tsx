@@ -2,11 +2,24 @@
 
 import { LEGAL_LINKS } from "@/lib/contact";
 import { useI18n } from "@/lib/i18n";
+import { useEffect, useState } from "react";
 
 const LINKTREE_URL = "https://linktr.ee/nimbustelecom";
 
 export function Footer() {
   const { dictionary } = useI18n();
+  const [year, setYear] = useState(2026);
+
+  useEffect(() => {
+    fetch(window.location.href, { method: "HEAD", cache: "no-store" })
+      .then((response) => {
+        const serverDate = response.headers.get("Date");
+        if (!serverDate) return;
+        const serverYear = new Date(serverDate).getFullYear();
+        if (serverYear > 2000) setYear(serverYear);
+      })
+      .catch(() => {});
+  }, []);
 
   return (
     <footer id="contacto" className="border-t border-nimbus-line bg-white pb-24 md:pb-0">
@@ -28,7 +41,7 @@ export function Footer() {
         </nav>
 
         <p className="mt-3">
-          © {new Date().getFullYear()} Nimbus Telecom. {dictionary.footer.rights}
+          © {year} Nimbus Telecom. {dictionary.footer.rights}
           <br />
           {dictionary.footer.officialLinksPrefix}:{" "}
           <a
